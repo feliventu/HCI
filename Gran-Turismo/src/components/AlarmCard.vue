@@ -3,18 +3,13 @@
         elevation=0 color="card">
         <v-row no-gutters>
             <v-col cols="8">
-                <v-card-item :title="device" class="mb-0">
-                    <template v-slot:subtitle>
-                        <span class="subtitle">{{ room }}</span>
-                    </template>
+                <v-card-item :title="alarm" class="mb-0">
+
                 </v-card-item>
             </v-col>
 
             <v-col cols="4" class="d-flex flex-column justify-end align-end pr-3">
-                <v-row class="my-4">
-                    <v-icon class="mr-3" color="icon" icon="mdi-lock-outline"></v-icon>
-                    <v-icon class="mr-5" color="icon" icon="mdi-heart-outline"></v-icon>
-                </v-row>
+
                 <v-switch inset hide-details :model-value="false" color="success" base-color="secondary" flat
                     inline></v-switch>
             </v-col>
@@ -24,10 +19,9 @@
 
 <script>
 export default {
-    name: 'DeviceCard',
+    name: 'AlarmCard',
     props: {
-        device: String,
-        room: String,
+        alarm: String,
     }
 }
 </script>
@@ -36,10 +30,5 @@ export default {
 .v-card.border-radius {
 
     border-radius: 10px;
-}
-
-.v-card-item .subtitle {
-    color: #000000;
-    opacity: 1;
 }
 </style>

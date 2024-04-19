@@ -1,10 +1,11 @@
 <template>
   <v-app>
     <v-main class="">
-      <h1>GranTurismo 4.0</h1>
+      <h1>GranTurismo 5.0</h1>
       <div class="d-flex">
-      <DeviceCard device="Parlante" room="Cuartito mama"/> 
-      <DeviceCard device="Cortina" room="Banio"/>
+        <DeviceCard device="Parlante" room="Cuarto mama" />
+        <DeviceCard device="Cortina" room="Living Room" />
+        <AlarmCard alarm="Porton Garage" />
       </div>
     </v-main>
 
@@ -13,5 +14,5 @@
 
 <script setup>
 
-  //
+//
 </script>
