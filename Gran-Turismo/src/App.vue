@@ -6,6 +6,7 @@
         <DeviceCard device="Parlante" room="Cuarto mama" />
         <DeviceCard device="Cortina" room="Living Room" />
         <AlarmCard alarm="Porton Garage" />
+        <RoutineCard routine="Ducha" description="Para poner musica y llenar la bañera." />
       </div>
     </v-main>
 
