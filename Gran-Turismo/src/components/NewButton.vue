@@ -1,8 +1,8 @@
 <script> </script>
 
 <template>  
-    <v-btn class="text-none text-subtitle-3" variant="flat" color="#808080" >+ Nuevo</v-btn>
-    
+<v-btn class="text-none text--black" variant="outlined" color="grey">+ Nuevo</v-btn>
+
 </template>
 
 <style>

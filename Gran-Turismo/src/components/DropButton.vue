@@ -32,10 +32,7 @@
   </script>
 
 <style> 
-
-v-select.custom-select {
-	border: 4px solid #000000 !important;
-	background-color: #000000;
-
+.custom-select .v-input__slot {
+    border: 2px solid red !important; /* Cambia el tamaño y el color del borde aquí */
 }
 </style>
