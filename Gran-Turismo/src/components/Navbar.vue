@@ -17,6 +17,7 @@
             <router-link to="/" class="xd" exact>
                 <div class="lefti"></div>
                 <div class="righti"></div>
+                <div>   </div> 
                 <v-btn text>Mi casa</v-btn>
             </router-link>
             <router-link to="/a">
@@ -46,13 +47,14 @@
     align-content: center;
     /* clip-path: polygon(0 0, 100% 0, 100% 85%, 75% 100%, 50% 85%, 25% 100%, 0 85%); */
 }
+
 .lefti,
 .righti {
     content: "";
     position: absolute;
     width: 100px;
     height: 80px;
-    background-color: #70d;
+    background-color: #70e;
     clip-path: ellipse(41% 62% at 36% 39%);
 }
 
