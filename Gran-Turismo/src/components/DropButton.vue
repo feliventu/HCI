@@ -1,13 +1,14 @@
 <template>
     <v-select
+        class="custom-select"
         variant="outlined"
         :items="states"
         label="Hogar"
         persistent-hint
         style="max-height: 20px; max-width: 150px;" 
         rounded="lg"
-        item-color="black"
-        color="black"
+		base-color="text"
+		item-color="text"
         single-line
     ></v-select>
   </template>
@@ -29,3 +30,12 @@
       },
     }
   </script>
+
+<style> 
+
+v-select.custom-select {
+	border: 4px solid #000000 !important;
+	background-color: #000000;
+
+}
+</style>
