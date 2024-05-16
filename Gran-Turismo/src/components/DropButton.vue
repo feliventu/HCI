@@ -1,14 +1,14 @@
 <template>
     <v-select
-        class="custom-select"
+		class="selector"
         variant="outlined"
         :items="states"
+		density="compact"
         label="Hogar"
         persistent-hint
-        style="max-height: 20px; max-width: 150px;" 
+        style="max-width: 150px;" 
         rounded="lg"
-		base-color="text"
-		item-color="text"
+		id="mySelect"
         single-line
     ></v-select>
   </template>
@@ -31,8 +31,19 @@
     }
   </script>
 
-<style> 
-.custom-select .v-input__slot {
-    border: 2px solid red !important; /* Cambia el tamaño y el color del borde aquí */
+<style>
+
+.v-field__outline {
+    --v-field-border-width: 3px !important; /* Change the border width here */
+	--v-field-border-opacity: 0.15;
+}
+
+
+.selector {
+
+
+	color: black;
+	font-weight: bold;
+
 }
 </style>
