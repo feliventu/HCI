@@ -1,6 +1,7 @@
 <template>
   <v-app>
-    <v-main class="">
+      <Navbar />
+      <v-main class="">
       <h1>GranTurismo 5.0</h1>
       <div class="d-flex">
         <DeviceCard device="Parlante" room="Cuarto mama" />
