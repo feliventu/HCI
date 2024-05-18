@@ -1,16 +1,21 @@
 
 <template>  
 <v-btn class="custom-button" variant="outlined" height="40px"  @click="dialog = true">+ Nuevo</v-btn>
+
+
 <v-dialog
+        class="popUp"
         v-model="dialog"
         max-width="480"
       >
         <v-card title="Nuevo">
-          <template v-slot:text >
+          <template v-slot:text>
+            <router-link to="/Dispositivos/NuevoDispositivo">
             <v-btn
               text="Dispositivo"
               @click="dialog2 = true"
             ></v-btn>
+          </router-link>
             <v-btn
               text="Rutina"
               @click="dialog2 = true"
@@ -48,6 +53,11 @@
 .v-btn {
     margin-right: 15px/* Add space to the left and right of the button */
 }
+
+.popUp{
+  background-color: rgba(0, 0, 0, 0.5); /* Negro con 50% de opacidad */
+}
+
 </style>
 
 <script>
