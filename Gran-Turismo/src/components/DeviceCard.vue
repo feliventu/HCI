@@ -1,11 +1,11 @@
 <template>
-    <v-card class="d-flex border-radius flex-column h-100 justify-space-between ma-3" height="115" width="350"
+    <v-card class="d-flex border-radius flex-column h-100 justify-space-between ma-0" height="115" width="350"
         elevation=0 color="card">
         <v-row no-gutters>
             <v-col cols="8">
                 <v-card-item :title="device" class="mb-0">
                     <template v-slot:subtitle>
-                        <span class="subtitle">{{ room }}</span>
+                        <span class="subtitle-c">{{ room }}</span>
                     </template>
                 </v-card-item>
             </v-col>
@@ -38,8 +38,9 @@ export default {
     border-radius: 10px;
 }
 
-.v-card-item .subtitle {
-    color: #000000;
-    opacity: 1;
-}
+.subtitle-c {
+    color: black !important; /* Change the color here */
+    font-size: 13px; /* Change the font size here */
+    opacity: 1; /* Change the opacity here */
+}   
 </style>

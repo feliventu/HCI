@@ -18,22 +18,27 @@
                 <div class="lefti"></div>
                 <div class="righti"></div>
                 <div>   </div> 
-                <v-btn text>Mi casa</v-btn>
+                <v-btn class="text">Mi casa</v-btn>
             </router-link>
             <router-link to="/a">
-                <v-btn text>Dispositivos</v-btn>
+                <v-btn class="text">Dispositivos</v-btn>
             </router-link>
             <router-link to="/b">
-                <v-btn text>Rutinas</v-btn>
+                <v-btn class="text">Rutinas</v-btn>
             </router-link>
             <router-link to="/c">
-                <v-btn text>Historial</v-btn>
+                <v-btn class="text">Historial</v-btn>
             </router-link>
         </v-toolbar>
     </v-sheet>
 </template>
 
 <style scoped>
+
+.text{
+    color: black;
+}
+
 .router-link-exact-active v-btn {
     color: white;
     background-color: #1976d2;

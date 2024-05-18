@@ -35,15 +35,15 @@
 
 .v-field__outline {
     --v-field-border-width: 3px !important; /* Change the border width here */
-	--v-field-border-opacity: 0.15;
+	--v-field-border-opacity: 0.15 !important; /* Change the border opacity here */
 }
 
 
 .selector {
 
-
-	color: black;
-	font-weight: bold;
+	font-weight: bold !important;
+	color: black !important;
+	font-weight: bold !important;
 
 }
 </style>
