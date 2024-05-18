@@ -21,7 +21,7 @@
                 light
                 rounded
                 text
-                to="devices"
+                to="/dispositivos"
                 active-class="bg-white h-100"
             >
                 Dispositivos
@@ -30,7 +30,7 @@
                 light
                 rounded
                 text
-                to="rutines"
+                to="rutinas"
                 active-class="bg-white h-100"
             >
                 Rutinas

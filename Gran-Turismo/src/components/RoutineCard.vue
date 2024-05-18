@@ -1,6 +1,6 @@
 <template>
 
-    <v-card v-if="condition === 'minimizado'" class="d-flex border-radius flex-column h-100 justify-space-between ma-3" height="115" width="350"
+    <v-card v-if="condition === 'minimizado'" class="d-flex border-radius flex-column h-100 justify-space-between ma-0" height="115" width="350"
         max-height="300" elevation=0 color="card">
         <v-row no-gutters>
 

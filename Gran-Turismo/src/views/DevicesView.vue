@@ -3,12 +3,13 @@
         <div>
             <v-row class="d-flex justify-space-between">
                 <DropButton />
-                <NewButton class="xD" />
+                <NewButton />
             </v-row>
         </div>
         <div>
-            <h1 class="text-lg">Dispositivos</h1>
-            <v-row class="pt-5">
+            <v-row class="pt-5"><h2 >Dispositivos</h2></v-row>
+            
+            <v-row class="pt-2">
                 <DeviceCard
                     class="mr-5 mb-5"
                     v-for="device in devices"

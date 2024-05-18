@@ -10,7 +10,7 @@
       >
         <v-card title="Nuevo">
           <template v-slot:text>
-            <router-link to="/Dispositivos/NuevoDispositivo">
+            <router-link to="/dispositivos/nuevo">
             <v-btn
               text="Dispositivo"
               @click="dialog2 = true"

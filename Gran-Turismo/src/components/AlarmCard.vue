@@ -1,5 +1,5 @@
 <template>
-    <v-card class="d-flex border-radius flex-column h-100 justify-space-between ma-3" height="115" width="350"
+    <v-card class="d-flex border-radius flex-column h-100 justify-space-between ma-0" height="115" width="350"
         elevation=0 color="card">
         <v-row no-gutters>
             <v-col cols="8">

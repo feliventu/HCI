@@ -1,35 +1,51 @@
 <template>
-    <v-app>
-        <v-main class="mt-5 ml-16">
-            <div class="d-flex justify-space-between">
-                <DropButton />
-                <NewButton class="xD" />
-            </div>
+  <v-app>
+    <v-main class="px-12 pt-5">
+      <div>
+        <v-row class="d-flex justify-space-between">
+          <DropButton />
+          <NewButton />
+        </v-row>
+      </div>
 
-            <h2>Alarmas recientes</h2>
-            <div class="d-flex">
-                <!-- First row -->
-                <AlarmCard alarm="Alarma 1" />
-            </div>
+      <div>
+        <v-row class="pt-5">
+          <h2>Alarmas recientes</h2>
+        </v-row>
+        <v-row class="pt-2">
+          <AlarmCard class="mr-5 mb-5" alarm="Alarma 1" />
+          <AlarmCard class="mr-5 mb-5" alarm="Alarma 1" />
+        </v-row>
+      </div>
 
-            <h2>Rutinas recientes</h2>
-            <div class="d-flex">
-                <!-- First row -->
-                <RoutineCard
-                    routine="Ducha"
-                    description="Para poner musica y llenar la bañera."
-                    condition="minimizado"
-                />
-            </div>
+      <div>
+        <v-row class="pt-5">
+          <h2>Rutinas recientes</h2>
+        </v-row>
 
-            <h2>Dispositivos recientes</h2>
-            <div class="d-flex">
-                <!-- First row -->
-                <DeviceCard device="Parlante" room="Cuarto mama" />
-                <DeviceCard device="Cortina" room="Living Room" />
-            </div>
-        </v-main>
-    </v-app>
+        <!-- First row -->
+        <v-row class="pt-2">
+          <RoutineCard
+            routine="Ducha"
+            description="Para poner musica y llenar la bañera."
+            condition="minimizado"
+          />
+        </v-row>
+      </div>
+
+      <div>
+        <!-- First row -->
+        <v-row class="pt-5">
+          <h2>Dispositivos recientes</h2>
+        </v-row>
+        <v-row class="pt-2">
+          <DeviceCard class="mr-5 mb-5" device="Luz" room="Cuarto mama" />
+          <DeviceCard class="mr-5 mb-5" device="Parlante" room="Cuarto mama" />
+          <DeviceCard class="mr-5 mb-5" device="Cortina" room="Living Room" />
+        </v-row>
+      </div>
+    </v-main>
+  </v-app>
 </template>
 
 <script setup>
