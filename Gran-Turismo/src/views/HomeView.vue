@@ -1,6 +1,5 @@
 <template>
   <v-app>
-    <Navbar />
     <v-main class="mt-5 ml-16">
       <div class="d-flex justify-space-between">
         <DropButton />
