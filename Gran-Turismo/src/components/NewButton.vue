@@ -20,10 +20,12 @@
               text="Rutina"
               @click="dialog2 = true"
             ></v-btn>
+            <router-link to="/hogares/nuevo">
             <v-btn
               text="Hogar"
               @click="dialog2 = true"
             ></v-btn>
+            </router-link>
           </template>
   
           <v-card-actions>

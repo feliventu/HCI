@@ -14,8 +14,8 @@
 
         <!-- Second row -->
         <v-toolbar dense flat color="primary" class="px-9 mb-3">
-            <v-btn light text to="/" :ripple="false" active-class="selected">
-                Mi casa
+            <v-btn light text to="/" :ripple="false" rounded active-class="selected">
+                Mi hogar
             </v-btn>
             <v-btn
                 light

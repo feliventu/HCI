@@ -9,17 +9,17 @@
       </div>
 
       <div>
-        <v-row class="pt-5">
+        <v-row class="pt-2">
           <h2>Alarmas recientes</h2>
         </v-row>
         <v-row class="pt-2">
           <AlarmCard class="mr-5 mb-5" alarm="Alarma 1" />
-          <AlarmCard class="mr-5 mb-5" alarm="Alarma 1" />
+          <AlarmCard class="mr-5 mb-5" alarm="Alarma 2" />
         </v-row>
       </div>
 
       <div>
-        <v-row class="pt-5">
+        <v-row class="pt-3">
           <h2>Rutinas recientes</h2>
         </v-row>
 
@@ -35,7 +35,7 @@
 
       <div>
         <!-- First row -->
-        <v-row class="pt-5">
+        <v-row class="pt-8">
           <h2>Dispositivos recientes</h2>
         </v-row>
         <v-row class="pt-2">
