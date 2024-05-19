@@ -1,24 +1,42 @@
 <template>
-  <div class="px-12 pt-5">
-    <h2>Nuevo Hogar</h2>
-    <form>
-      <v-text-field
-        class="pt-5"
-        label="Nombre"
-        style="max-width: 300px"
-        variant="outlined"
-        v-model="name"
-      ></v-text-field>
-      <v-btn
-        class="custom-button"
-        variant="outlined"
-        height="40px"
-        @click="addHome()"
-        :disabled="!canCreate"
-        >Crear hogar</v-btn
-      >
-    </form>
-  </div>
+	<div class="px-12 pt-5">
+		<h2>Nuevo Hogar</h2>
+		<form>
+			<v-text-field
+				class="pt-5"
+				label="Nombre"
+				style="max-width: 300px"
+				variant="outlined"
+				v-model="name"
+			></v-text-field>
+			<v-btn
+				class="custom-button"
+				variant="outlined"
+				height="40px"
+				@click="addHome()"
+				:disabled="!canCreate"
+				>Crear</v-btn
+			>
+
+			<v-btn
+				class="custom-button"
+				variant="outlined"
+				height="40px"
+				@click="getHomes()"
+				
+				>Listar</v-btn
+			>			
+			
+			<v-btn
+				class="custom-button"
+				variant="outlined"
+				height="40px"
+				@click="deleteHome()"
+				
+				>Borrar</v-btn
+			>
+		</form>
+	</div>
 </template>
 
 <script setup>
@@ -32,16 +50,27 @@ const counter = ref(0);
 const name = ref(null);
 
 const canCreate = computed(() => {
-    return name.value != null && name.value.length > 0;
+		return name.value != null && name.value.length > 0;
 });
 
 
+
 async function addHome() {
-  
-  const home = new Home(counter.value++, name.value);
-  await useHomeStore().add(home);
-  name.value = null;
+	
+	const home = new Home(counter.value++, name.value);
+	await useHomeStore().add(home);
+	name.value = null;
 }
+
+async function deleteHome() {
+       await useHomeStore().remove("ed3840048c9dd73d");
+		console.log("Borrado");
+}
+
+async function getHomes() {
+	await useHomeStore().get();
+}
+
 
 </script>
 
@@ -49,11 +78,11 @@ async function addHome() {
 
 <style>
 .custom-button {
-  background-color: white !important;
-  border-radius: 10px !important;
-  border-color: rgba(0, 0, 0, 0.15) !important;
-  border-width: 3px !important;
-  color: black !important;
-  font-weight: bold !important;
+	background-color: white !important;
+	border-radius: 10px !important;
+	border-color: rgba(0, 0, 0, 0.15) !important;
+	border-width: 3px !important;
+	color: black !important;
+	font-weight: bold !important;
 }
 </style>

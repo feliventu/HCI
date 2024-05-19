@@ -5,6 +5,7 @@ import { HomeApi, Home } from "@/api/home";
 
 export const useHomeStore = defineStore('home', () => {
     const homes= ref([])
+
     
     async function add(home){
         const result = await HomeApi.add(home)
@@ -12,6 +13,20 @@ export const useHomeStore = defineStore('home', () => {
         return Object.assign(new Home(), result)
     }
 
-    return { homes, add }
+    
+
+    async function remove(id){
+        const result = await HomeApi.remove(id)
+        homes.value = result
+        return result
+    }
+
+    async function get(){
+        const result = await HomeApi.get()
+        homes.value = result
+        return result
+    }
+
+    return { homes, add, remove, get}
 
 })
