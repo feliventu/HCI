@@ -45,7 +45,6 @@ import { Home } from "@/api/home";
 import { useHomeStore } from "@/store/homeStore";
 import { computed } from "vue";
 
-const counter = ref(0);
 
 const name = ref(null);
 
@@ -57,14 +56,13 @@ const canCreate = computed(() => {
 
 async function addHome() {
 	
-	const home = new Home(counter.value++, name.value);
+	const home = new Home(null, name.value);
 	await useHomeStore().add(home);
 	name.value = null;
 }
 
 async function deleteHome() {
-       await useHomeStore().remove("ed3840048c9dd73d");
-		console.log("Borrado");
+       await useHomeStore().remove();
 }
 
 async function getHomes() {

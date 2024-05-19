@@ -9,24 +9,27 @@
         max-width="480"
       >
         <v-card title="Nuevo">
-          <template v-slot:text>
+          <v-card-text>
+
             <router-link to="/dispositivos/nuevo">
             <v-btn
               text="Dispositivo"
               @click="dialog2 = true"
             ></v-btn>
+
           </router-link>
             <v-btn
               text="Rutina"
               @click="dialog2 = true"
             ></v-btn>
             <router-link to="/hogares/nuevo">
+
             <v-btn
               text="Hogar"
               @click="dialog2 = true"
             ></v-btn>
             </router-link>
-          </template>
+          </v-card-text>
   
           <v-card-actions>
             <v-spacer></v-spacer>
@@ -53,8 +56,9 @@
 }
 
 .v-btn {
-    margin-right: 15px/* Add space to the left and right of the button */
+    margin-right: 15px;/* Add space to the left and right of the button */
 }
+
 
 .popUp{
   background-color: rgba(0, 0, 0, 0.5); /* Negro con 50% de opacidad */

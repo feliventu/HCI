@@ -7,7 +7,7 @@
             </v-row>
         </div>
         <div>
-            <v-row class="pt-5"><h2 >Dispositivos</h2></v-row>
+            <v-row class="pt-2"><h2 >Dispositivos</h2></v-row>
             
             <v-row class="pt-2">
                 <DeviceCard

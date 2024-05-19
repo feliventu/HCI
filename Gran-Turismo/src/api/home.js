@@ -1,8 +1,8 @@
 import { Api } from "./api";
 
 class HomeApi extends Api {
-  static getUrl() {
-    return `${Api.baseUrl}/createhome`;
+  static getUrl(slug) {
+    return `${Api.baseUrl}/homes${slug ? `/${slug}` : ""}`;
   }
   static async add(home, controller) {
     console.log("hola chavales");
@@ -11,8 +11,9 @@ class HomeApi extends Api {
     console.log(response);
   }
 
-  static async remove(homeId, controller) {
-    await Api.delete(`${Api.baseUrl}/deletehome?homeId=${homeId}`, controller);
+  static async remove(home, controller) {
+
+    await Api.delete(HomeApi.getUrl(home.id), controller);
 	const response = await Api.get(`${Api.baseUrl}/retrievehomes`, controller);
     console.log(response);
   }
@@ -20,7 +21,6 @@ class HomeApi extends Api {
   static async get(controller) {
 	return await Api.get(`${Api.baseUrl}/retrievehomes`, controller);
   }
-
 
 }
 

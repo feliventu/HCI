@@ -13,23 +13,18 @@
     ></v-select>
   </template>
   
-  <script setup>
-    const states = [
-      'Casa 1', 'Casa 2', 'Casa 3', 'Casa 4',
-    ]
-  </script>
   
   <script>
-    export default {
-      data () {
-        return {
-          states: [
-            'Casa 1', 'Casa 2', 'Casa 3', 'Casa 4',
-          ],
-        }
-      },
-    }
-  </script>
+  export default {
+    name: "DropButton",
+    props:{
+      states: Array,
+    },
+  };
+   </script> 
+
+  
+
 
 <style>
 

@@ -3,7 +3,7 @@
     <v-main class="px-12 pt-5">
       <div>
         <v-row class="d-flex justify-space-between">
-          <DropButton />
+          <DropButton :items="homeStore"/>
           <NewButton />
         </v-row>
       </div>
@@ -48,8 +48,24 @@
   </v-app>
 </template>
 
-<script setup>
+
+<script>
 import AlarmCard from "@/components/AlarmCard.vue";
+import DropButton from "@/components/DropButton.vue";
+import { useHomeStore } from "@/store/homeStore";
+
+export default{
+  name: "Homes",
+  components:{
+    DropButton,
+  },
+  data(){
+    return{
+      homeStore: useHomeStore().homes.map((home) => home.name),
+    }
+  }
+}
+
 </script>
 
 <style></style>
