@@ -1,19 +1,20 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import { HomeApi, Home } from "@/api/home";
+import { useRoomStore } from './roomStore';
 
 
 export const useHomeStore = defineStore('home', () => {
     const homes= ref([])
+    
    
 
-    
     async function add(home){
-        const result = await HomeApi.add(home)
-        homes.value.push(home)
-        updateHomes()
+        
+        const result = await HomeApi.add(home) 
+        await updateHomes() 
+        return Object.assign(new Home(), result)
     }
-
     
     async function remove(){
 
@@ -25,6 +26,8 @@ export const useHomeStore = defineStore('home', () => {
         return result
     }
 
+
+
     async function get(){
         const result = await HomeApi.get()
         updateHomes()
@@ -32,19 +35,27 @@ export const useHomeStore = defineStore('home', () => {
     }
 
     function getLast(){ 
-        return homes.value.pop()
+        return homes.value[homes.value.length - 1]
     }
 
     async function updateHomes(){
         const result = await HomeApi.get()
         homes.value = result.map((home) => Object.assign(new Home(), home))
-        console.log(homes.value)
+
+
     }
 
+    async function addRoomtoHome(home, room){
+        const result = await HomeApi.addRoomtoHome(home,room)
+            
+    }
+        
     return {
         homes,
         add,
         remove,
-        get
+        get,
+        updateHomes,
+        addRoomtoHome
     }
 })

@@ -3,7 +3,7 @@
     <v-main class="px-12 pt-5">
       <div>
         <v-row class="d-flex justify-space-between">
-          <DropButton :items="homeStore"/>
+          <DropButton :items="homes"/>
           <NewButton />
         </v-row>
       </div>
@@ -49,23 +49,20 @@
 </template>
 
 
-<script>
+<script setup>
 import AlarmCard from "@/components/AlarmCard.vue";
 import DropButton from "@/components/DropButton.vue";
 import { useHomeStore } from "@/store/homeStore";
+import { ref, onMounted } from "vue";
 
-export default{
-  name: "Homes",
-  components:{
-    DropButton,
-  },
-  data(){
-    return{
-      homeStore: useHomeStore().homes.map((home) => home.name),
-    }
-  }
-}
 
+const homeStore = useHomeStore(); 
+
+const homes = ref([]);
+
+onMounted(async () => {
+  homes.value = (await homeStore.get()).map((home) => home.name);
+});
 </script>
 
 <style></style>

@@ -42,9 +42,16 @@
 <script setup>
 import { ref } from "vue";
 import { Home } from "@/api/home";
+import { Room } from "@/api/room";
 import { useHomeStore } from "@/store/homeStore";
 import { computed } from "vue";
+import { useRoomStore } from "@/store/roomStore";
 
+const homeStore = useHomeStore();
+const roomStore = useRoomStore();
+
+const home = ref(null);
+const room = ref(null);
 
 const name = ref(null);
 
@@ -55,9 +62,16 @@ const canCreate = computed(() => {
 
 
 async function addHome() {
+
+	const newRoom = new Room(null, `${name.value} Room`);
+	room.value = await roomStore.add(newRoom);
+
+	const newHome = new Home(null, name.value);
+	home.value = await homeStore.add(newHome);
 	
-	const home = new Home(null, name.value);
-	await useHomeStore().add(home);
+	
+	await useHomeStore().addRoomtoHome(home.value, room.value);
+
 	name.value = null;
 }
 
