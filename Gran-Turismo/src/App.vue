@@ -9,9 +9,15 @@
 
 <script setup>
 import { RouterLink, RouterView } from "vue-router";
+import { onMounted } from "vue";
 
+import { useDeviceStore } from "@/store/deviceStore";
 
+const deviceStore = useDeviceStore();
 
+onMounted(() => {
+    deviceStore.initialize();
+});
 </script>
 
 <style></style>
