@@ -8,6 +8,7 @@ export const useRoomStore = defineStore('room', () => {
 
 
     async function add(room){
+        console.log("hola chavales")
         const result = await RoomApi.add(room)
         await updateRooms();
         return Object.assign(new Room(), result)

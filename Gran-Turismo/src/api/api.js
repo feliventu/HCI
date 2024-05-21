@@ -1,6 +1,6 @@
 class Api {
     static get baseUrl() {
-        return "http://localhost:8081/api";
+        return "http://localhost:8080/api";
     }
 
     static get timeout() {
