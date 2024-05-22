@@ -30,14 +30,17 @@
           <h2>Dispositivos recientes</h2>
         </v-row>
         <v-row class="pt-2">
-          <device-card class="mr-5 mb-5" v-for="device in devices" 
-            :key="device.id"
-            :name="device.name" 
-            :type="device.type"
-            :room="device.room"
-            :isOn="device.isOn"
-            :isFavorite="device.isFavorite"
-            :isLocked="device.isLocked"/>
+          <DeviceCard
+                    class="mr-5 mb-5"
+                    v-for="device in devices"
+                    :key="device.id"
+                    :name="device.name"
+                    :type="device.type"
+                    :room="device.room"
+                    :isOn="device.isOn"
+                    :isFavorite="device.isFavorite"
+                    :isLocked="device.isLocked"
+                />
         </v-row>
       </div>
     </v-main>
@@ -59,7 +62,7 @@ const roomStore = useRoomStore();
 
 const homes = ref([]);
 
-let devices = ref([]);
+const devices = ref([]);
 
 onMounted(async () => {
   homes.value = (await homeStore.get()).map((home) => home.name);
@@ -67,10 +70,12 @@ onMounted(async () => {
 
 watch(() => actualHome.value, async (newValue) => {
     const roomName = `${actualHome.value} Room`;
-    devices = await roomStore.getDevicesFromRoom(roomName);
-
+    devices.value = await roomStore.getDevicesFromRoom(roomName);
+    console.log(devices)
   }
 );
+
+
 
 //console.log(devices)
 </script>

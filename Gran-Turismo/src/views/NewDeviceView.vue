@@ -74,9 +74,22 @@ onMounted(async () => {
             ([name, id]) => ({ name: name.toString(), id: id.toString() }),
         );
 
+        async function addDeviceToHome() {
+
+            const newDevice = await deviceStore.add(new Device(name.value, null, deviceTypeId.value));
+            
+            const home = await homeStore.getHomeByName(home1.value);
+
+            //dice room pero en realidad es a home xD
+            const room = await homeStore.getRoomsFromHome(home);
+
+           
+            await roomStore.addDeviceToRoom(room[0], newDevice);
+        }
+
         // Debugging logs
-        //console.log("Device Types Map:", deviceTypesMap);
-        //console.log("Formatted Device Types:", formattedDeviceTypes.value);
+        console.log("Device Types Map:", deviceTypesMap);
+        console.log("Formatted Device Types:", formattedDeviceTypes.value);
     } catch (error) {
         console.error("Error fetching data:", error);
     }
