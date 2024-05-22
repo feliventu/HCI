@@ -5,12 +5,13 @@
         width="350"
         elevation="0"
         color="card"
-    >
+        @click="dialogVisible1 = true"
+    >   
         <v-row no-gutters>
             <v-col cols="8">
                 <v-card-item :title="name" class="mb-0">
                     <template v-slot:subtitle>
-                        <span class="subtitle-c">{{ room }}</span>
+                        <span class="subtitle-c">{{ type }}</span>
                     </template>
                 </v-card-item>
             </v-col>
@@ -45,9 +46,14 @@
             </v-col>
         </v-row>
     </v-card>
+    
+    <SpeakerDeviceDialog v-model = "dialogVisible1"> </SpeakerDeviceDialog>
+    
 </template>
 
 <script>
+import SpeakerDeviceDialog from "@/components/SpeakerDeviceDialog.vue";
+
 export default {
     name: "DeviceCard",
     props: {

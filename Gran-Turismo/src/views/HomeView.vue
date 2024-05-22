@@ -42,7 +42,7 @@
                     v-for="device in devicesNoAlarm"                   
                     :key="device.id"
                     :name="device.name"
-                    :type="device.type"
+                    :type="device.type.name"
                     :room="device.room"
                     :isOn="device.isOn"
                     :isFavorite="device.isFavorite"
