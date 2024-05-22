@@ -14,6 +14,8 @@ class RoomApi extends Api {
     static async get(controller) {
         return await Api.get(`${Api.baseUrl}/rooms`, controller);
     }
+
+    
 }
 
 class Room {

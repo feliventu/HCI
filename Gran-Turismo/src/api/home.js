@@ -33,8 +33,8 @@ static async addRoomtoHome(home, room, controller){
 }
 
 static async getRoomsFromHome(home, controller){
-  return await Api.get(`${Api.baseUrl}/homes/${home.id}/rooms`, controller);
-
+  const response = await Api.get(`${Api.baseUrl}/homes/${home.id}/rooms`, controller);
+  return response;
 }
 }
 class Home {

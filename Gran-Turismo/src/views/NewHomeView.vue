@@ -27,14 +27,6 @@
 				>Listar</v-btn
 			>			
 			
-			<v-btn
-				class="custom-button"
-				variant="outlined"
-				height="40px"
-				@click="deleteHome()"
-				
-				>Borrar</v-btn
-			>
 		</form>
 	</div>
 </template>
@@ -75,9 +67,6 @@ async function addHome() {
 	name.value = null;
 }
 
-async function deleteHome() {
-       await useHomeStore().remove();
-}
 
 async function getHomes() {
 	await useHomeStore().get();

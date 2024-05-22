@@ -1,7 +1,7 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import { Room, RoomApi } from "@/api/room";
-
+import { RoomDeviceApi } from "@/api/roomDevice";
 
 export const useRoomStore = defineStore('room', () => {
     const rooms= ref([])
@@ -25,9 +25,15 @@ export const useRoomStore = defineStore('room', () => {
         rooms.value = result.map((room) => Object.assign(new Room(), room))
     }
 
+    async function addDeviceToRoom(room, device){
+        const result = await RoomDeviceApi.add(room, device)
+        return result
+    }
+
     return {
         rooms,
         add,
-        get
+        get,
+        addDeviceToRoom,
     }
 })

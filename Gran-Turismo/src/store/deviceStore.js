@@ -17,15 +17,15 @@ export const useDeviceStore = defineStore("device", () => {
         const result = await DeviceApi.postDevice(device);
         // -> update devices (TODO getDevices)
         // devices.value = result.map((dev) => Object.assign(new Device(), dev));
-        console.log("Device added:", result);
+        
         const dev = Object.assign(new Device(), result);
         devices.value.push(dev);
 
-        console.log("Current device types map:");
+      /*  console.log("Current device types map:");
         deviceTypes.value.forEach((value, key) => {
             console.log(`Name: ${key}, ID: ${value}`);
         });
-
+*/
         return dev;
     }
 

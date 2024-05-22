@@ -45,8 +45,9 @@
 
 <script setup>
 import DropButton from "@/components/DropButton.vue";
-import { useDeviceStore } from "@/store/deviceStore";
+import { useRoomStore } from "@/store/roomStore";
 import { useHomeStore } from "@/store/homeStore";
+import { useDeviceStore } from "@/store/deviceStore";
 import { Device } from "@/api/devices.js";
 import { ref, onMounted } from "vue";
 import { computed } from "vue";
@@ -55,6 +56,7 @@ import { reactive } from "vue";
 const states = ["Parlante", "Cortina", "Aire acondicionado", "Alarma"];
 const homeStore = useHomeStore();
 const deviceStore = useDeviceStore();
+const roomStore = useRoomStore();
 
 const homes = ref([]);
 const formattedDeviceTypes = ref([]);
@@ -73,8 +75,8 @@ onMounted(async () => {
         );
 
         // Debugging logs
-        console.log("Device Types Map:", deviceTypesMap);
-        console.log("Formatted Device Types:", formattedDeviceTypes.value);
+        //console.log("Device Types Map:", deviceTypesMap);
+        //console.log("Formatted Device Types:", formattedDeviceTypes.value);
     } catch (error) {
         console.error("Error fetching data:", error);
     }
@@ -84,8 +86,18 @@ const canCreate = computed(() => {
     return name.value && home1.value && deviceTypeId.value;
 });
 
-function addDeviceToHome() {
-    deviceStore.add(new Device(name.value, deviceTypeId.value, home1.value));
+async function addDeviceToHome() {
+
+    const newDevice = await deviceStore.add(new Device(name.value, null, deviceTypeId.value));
+    
+    const home = await homeStore.getHomeByName(home1.value);
+
+    //dice room pero en realidad es a home xD
+    const room = await homeStore.getRoomsFromHome(home);
+
+   
+    await roomStore.addDeviceToRoom(room[0], newDevice);
+   
 }
 // TEMP (type has to be an object with id)
 </script>

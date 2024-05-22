@@ -8,23 +8,27 @@
         v-model="dialog"
         max-width="480"
       >
-        <v-card title="Nuevo">
+        <v-card title="Nuevo"
+		class="border-radius">
           <v-card-text>
 
             <router-link to="/dispositivos/nuevo">
             <v-btn
+				class="border-radius"
               text="Dispositivo"
               @click="dialog2 = true"
             ></v-btn>
 
           </router-link>
             <v-btn
+			class="border-radius"
               text="Rutina"
               @click="dialog2 = true"
             ></v-btn>
             <router-link to="/hogares/nuevo">
 
             <v-btn
+			class="border-radius"
               text="Hogar"
               @click="dialog2 = true"
             ></v-btn>
@@ -62,6 +66,10 @@
 
 .popUp{
   background-color: rgba(0, 0, 0, 0.5); /* Negro con 50% de opacidad */
+}
+
+.border-radius {
+    border-radius: 10px !important;
 }
 
 </style>

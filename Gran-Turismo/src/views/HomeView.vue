@@ -63,6 +63,9 @@ const homes = ref([]);
 onMounted(async () => {
   homes.value = (await homeStore.get()).map((home) => home.name);
 });
+
+
+
 </script>
 
 <style></style>
