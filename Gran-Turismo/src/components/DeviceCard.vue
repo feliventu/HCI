@@ -65,6 +65,11 @@ export default {
         isFavorite: Boolean,
         isOn: Boolean,
     },
+    data() {
+        return {
+            dialogVisible1: false,
+        };
+    },
 };
 </script>
 
