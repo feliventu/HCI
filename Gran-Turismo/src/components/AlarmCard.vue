@@ -3,7 +3,7 @@
         elevation=0 color="card">
         <v-row no-gutters>
             <v-col cols="8">
-                <v-card-item :title="alarm" class="mb-0">
+                <v-card-item :title="name" class="mb-0">
 
                 </v-card-item>
             </v-col>
@@ -21,7 +21,8 @@
 export default {
     name: 'AlarmCard',
     props: {
-        alarm: String,
+        id: Number,
+        name: String,
     }
 }
 </script>

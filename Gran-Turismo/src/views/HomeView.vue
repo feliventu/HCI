@@ -12,7 +12,14 @@
         <v-row class="pt-2">
           <h2>Alarmas recientes</h2>
         </v-row>
-        <v-row class="pt-2"> </v-row>
+        <v-row class="pt-2"> 
+          <AlarmCard
+            class="mr-5 mb-5"
+            v-for="device in devicesAlarm"
+            :key="device.id"
+            :name="device.name"
+          />
+        </v-row>
       </div>
 
       <div>
@@ -32,7 +39,7 @@
         <v-row class="pt-2">
           <DeviceCard
                     class="mr-5 mb-5"
-                    v-for="device in devices"
+                    v-for="device in devicesNoAlarm"                   
                     :key="device.id"
                     :name="device.name"
                     :type="device.type"
@@ -63,6 +70,8 @@ const roomStore = useRoomStore();
 const homes = ref([]);
 
 const devices = ref([]);
+let devicesAlarm = ref([]);
+let devicesNoAlarm = ref([]);
 
 onMounted(async () => {
   homes.value = (await homeStore.get()).map((home) => home.name);
@@ -72,6 +81,8 @@ watch(() => actualHome.value, async (newValue) => {
     const roomName = `${actualHome.value} Room`;
     devices.value = await roomStore.getDevicesFromRoom(roomName);
     console.log(devices)
+    devicesAlarm.value= devices.value.filter(device => device.type.name === 'alarm');
+    devicesNoAlarm.value= devices.value.filter(device => device.type.name !== 'alarm');
   }
 );
 

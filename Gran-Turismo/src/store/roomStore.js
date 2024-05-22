@@ -37,7 +37,6 @@ export const useRoomStore = defineStore("room", () => {
   async function getDevicesFromRoom(roomName) {
     await updateRooms()
     const auxRoom =  getRoomByName(roomName);
-    console.log(auxRoom);
     const result = await RoomDeviceApi.get(auxRoom);
     return result;
   }
