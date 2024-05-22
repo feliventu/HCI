@@ -6,7 +6,7 @@
 		density="compact"
         label="Hogar"
         persistent-hint
-        style="max-width: 150px;" 
+        style="max-width: 200px;" 
         rounded="lg"
 		id="mySelect"
         single-line

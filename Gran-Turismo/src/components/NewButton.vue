@@ -14,21 +14,24 @@
 
             <router-link to="/dispositivos/nuevo">
             <v-btn
-				class="border-radius"
+			class="custom-button"
+			elevation="0"
               text="Dispositivo"
               @click="dialog2 = true"
             ></v-btn>
 
           </router-link>
             <v-btn
-			class="border-radius"
+			class="custom-button"
+			elevation="0"
               text="Rutina"
               @click="dialog2 = true"
             ></v-btn>
             <router-link to="/hogares/nuevo">
 
             <v-btn
-			class="border-radius"
+			class="custom-button"
+			elevation="0"
               text="Hogar"
               @click="dialog2 = true"
             ></v-btn>
@@ -57,6 +60,7 @@
   border-width: 3px !important;
   color: black !important;
   font-weight: bold !important;
+
 }
 
 .v-btn {
