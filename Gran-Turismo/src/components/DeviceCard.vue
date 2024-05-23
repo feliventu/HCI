@@ -35,6 +35,7 @@
           inset
           hide-details
           :model-value="isOn"
+          :v-model="isOn"
           color="success"
           base-color="secondary"
           flat
@@ -62,23 +63,32 @@ const props = defineProps({
   name: String,
   type: String,
   room: String,
+  isOn: Boolean,
   isLocked: Boolean,
   isFavorite: Boolean,
-  isOn: Boolean,
 });
 
+const dialogVisible1 = ref(false);
+
+
 const deviceStore = useDeviceStore();
+let localIsOn = ref(props.isOn);
 
 async function toggleDevice() {
-  //this.$emit('toggle-device', { id: props.id, isOn: !props.isOn });
-  //console.log(deviceId);
-  console.log(props.isOn)
-  //console.log(props.id);
+  
+
+ 
   const device = await deviceStore.getDeviceById(props.id);
-  //console.log(device);
-  if(props.isOn == true){
-  await deviceStore.activateDevice(device);
+
+  if(localIsOn.value === false){
+  localIsOn = ref(true);
+  await deviceStore.actionDevice(device,'play');
   }
+  else if(localIsOn.value === true){
+    localIsOn = ref(false);
+    await deviceStore.actionDevice(device,'stop');
+  }
+
 }
 </script>
 

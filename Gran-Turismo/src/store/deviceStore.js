@@ -46,9 +46,8 @@ export const useDeviceStore = defineStore("device", () => {
         return result;
     }
 
-    async function activateDevice(device) {
-        await DeviceApi.activateDevice(device);
-        console.log(getDeviceById(device.id))
+    async function actionDevice(device, action) {
+        await DeviceApi.actionDevice(device, action);
     }
 
     return {
@@ -59,6 +58,6 @@ export const useDeviceStore = defineStore("device", () => {
         getDeviceTypes,
         add,
         getDeviceById,
-        activateDevice,
+        actionDevice,
     };
 });

@@ -16,18 +16,19 @@ class DeviceApi extends Api {
         return Api.get(`${Api.baseUrl}/devices`, controller);
     }
 
-    static async activateDevice(device, controller){
-        return Api.put(`${Api.baseUrl}/devices/${device.id}/play`, device, controller);
+    static async actionDevice(device, action, controller){
+        return Api.put(`${Api.baseUrl}/devices/${device.id}/${action}`, device, controller);
     }
 }
 
 class Device {
-    constructor(name, id, typeId, isOn = false, isLocked = false, isFavorite = false) {
+    constructor(name, id, typeId, isOn, isLocked = false, isFavorite = false) {
         this.name = name;
         if(id) {
             this.id = id;
         }
         this.type = new DeviceType(typeId); //"go46xmbqeomjrsjr"); // TEMP
+        this.isOn = isOn;
         this.meta = {
           
             isLocked: isLocked,

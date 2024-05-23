@@ -57,12 +57,12 @@
             class="d-flex justify-space-between"
           >
             <DeviceCard
-			:key="device.id"
+			        :key="device.id"
               :id="device.id"
               :name="device.name"
               :type="device.type.name"
               :room="device.room"
-              :isOn="device.isOn"
+              :isOn="device.state.status === 'playing' ? true : false"
               :isFavorite="device.isFavorite"
               :isLocked="device.isLocked"
             />
@@ -105,8 +105,6 @@
 	 
 	  devicesAlarm.value= devices.value.filter(device => device.type.name === 'alarm');
 	  devicesNoAlarm.value= devices.value.filter(device => device.type.name !== 'alarm');
-
-    console.log(devicesNoAlarm.value)
 	}
   );
   
