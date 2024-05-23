@@ -6,10 +6,21 @@
     elevation="0"
     color="card"
     @click="dialogVisible1 = true"
+    
   >
     <v-row no-gutters>
-      <v-col cols="8">
-        <v-card-item :title="name" class="mb-0">
+      
+
+      <v-col cols="8" class="d-flex">
+        <v-icon 
+            
+            class="ml-3 mt-4" 
+            color="icon"
+            :icon="icon"
+            size="20"
+          ></v-icon>
+        <v-card-item :title="name" class="mt-n4 ml-n2">
+            
           <template v-slot:subtitle>
             <span class="subtitle-c">{{ type }}</span>
           </template>
@@ -56,7 +67,7 @@
 
 <script setup>
 import { useDeviceStore } from "@/store/deviceStore";
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 
 const props = defineProps({
   id: String,
@@ -70,14 +81,11 @@ const props = defineProps({
 
 const dialogVisible1 = ref(false);
 
-
 const deviceStore = useDeviceStore();
 let localIsOn = ref(props.isOn);
 
 async function toggleDevice() {
-  
-
- 
+   
   const device = await deviceStore.getDeviceById(props.id);
 
   if(localIsOn.value === false){
@@ -90,6 +98,20 @@ async function toggleDevice() {
   }
 
 }
+
+const icon = ref("mdi-speaker");
+
+onMounted(() => {
+  if (props.type === "speaker") {
+    icon.value = "mdi-speaker";
+  } else if (props.type === "ac") {
+    icon.value = "mdi-air-filter";
+  } else if (props.type === "blinds") {
+    icon.value = "mdi-blinds";
+  } else {
+    icon.value = "mdi-tablet-cellphone";
+  }
+});
 </script>
 
 <script>

@@ -93,7 +93,7 @@ const canCreate = computed(() => {
 
 async function addDeviceToHome() {
 
-    const newDevice = await deviceStore.add(new Device(name.value, null, deviceTypeId.value, null));
+    const newDevice = await deviceStore.add(new Device(name.value, null, deviceTypeId.value));
     
     const home = await homeStore.getHomeByName(home1.value);
 

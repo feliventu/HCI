@@ -22,13 +22,13 @@ class DeviceApi extends Api {
 }
 
 class Device {
-    constructor(name, id, typeId, isOn, isLocked = false, isFavorite = false) {
+    constructor(name, id, typeId, isLocked = false, isFavorite = false) {
         this.name = name;
         if(id) {
             this.id = id;
         }
         this.type = new DeviceType(typeId); //"go46xmbqeomjrsjr"); // TEMP
-        this.isOn = isOn;
+
         this.meta = {
           
             isLocked: isLocked,
