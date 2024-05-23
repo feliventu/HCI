@@ -53,18 +53,18 @@
 		  
         </v-row>
 		
-		<v-row class="mb-0">
-		<v-btn 
+		<v-row class="mb-0 bg-black">
+      <v-btn 
 		v-if="type == 'blinds'"
 		density="compact" 
 		class="custom-button-card "
 		elevation="0"
-		@click.stop="openBlids"
-        
-        
-		 > Action</v-btn>
+		@click.stop="openCloseBlinds"
+   
+     > Action</v-btn>
 
 		</v-row>
+		
 		
 
         <v-switch
@@ -112,10 +112,8 @@ const props = defineProps({
 const dialogVisible1 = ref(false);
 
 const deviceStore = useDeviceStore();
-
 let localIsOn = ref(props.isOn)
 let switchIsOn
-
 if(localIsOn.value === "on" || localIsOn.value === "playing" ){
   switchIsOn = true;
 }
@@ -129,25 +127,27 @@ let setLevel = ref(0);
 if(props.type === 'blinds'){
 localCurrentLevel = ref(props.state.currentLevel);
 setLevel = ref(props.state.level)
+
 }
-/*
+
 watch(localCurrentLevel, async (newLevel) => {
     localCurrentLevel.value = newLevel;
 
 });
-//0% es cerrado
+
+
 async function openCloseBlinds(){
   const device = await deviceStore.getDeviceById(props.id);
-  //abre
+
   if(localCurrentLevel.value === 0){
-    await deviceStore.actionDevice(device,'open');
+     await deviceStore.actionDevice(device,'close')
   }
   else if(localCurrentLevel.value === setLevel.value){
-    await deviceStore.actionDevice(device,'close');
+    await deviceStore.actionDevice(device,'open')
   }
-  return;
+}
 
-}*/
+
 
 
 async function toggleDevice() {
@@ -164,7 +164,7 @@ async function toggleDevice() {
     const stopAction = (props.type === "speaker") ? 'stop' : (props.type === "ac") ? 'turnOff' : '';
     await deviceStore.actionDevice(device,stopAction);
   }
-  return;
+  
 }
 
 const icon = ref("mdi-speaker");
