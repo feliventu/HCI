@@ -4,11 +4,11 @@
 
 
 <v-dialog
-        class="popUp"
+        
         v-model="dialog"
         max-width="480"
       >
-        <v-card title="Nuevo"
+        <v-card title="Crear nuevo"
 		class="border-radius">
           <v-card-text>
 
@@ -68,9 +68,6 @@
 }
 
 
-.popUp{
-  background-color: rgba(0, 0, 0, 0.5); /* Negro con 50% de opacidad */
-}
 
 .border-radius {
     border-radius: 10px !important;

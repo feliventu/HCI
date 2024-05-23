@@ -53,7 +53,7 @@ import { ref, onMounted } from "vue";
 import { computed } from "vue";
 import { reactive } from "vue";
 
-const states = ["Parlante", "Cortina", "Aire acondicionado", "Alarma"];
+
 const homeStore = useHomeStore();
 const deviceStore = useDeviceStore();
 const roomStore = useRoomStore();
@@ -74,6 +74,11 @@ onMounted(async () => {
             ([name, id]) => ({ name: name.toString(), id: id.toString() }),
         );
 
+        const allowedTypes = ["speaker", "blinds", "ac", "alarm"];
+        formattedDeviceTypes.value = formattedDeviceTypes.value.filter(
+            (deviceType) => allowedTypes.includes(deviceType.name),
+        );
+        
         // Debugging logs
       //  console.log("Device Types Map:", deviceTypesMap);
       //  console.log("Formatted Device Types:", formattedDeviceTypes.value);
