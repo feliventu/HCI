@@ -59,8 +59,9 @@
               :id="device.id"
               :name="device.name"
               :type="device.type.name"
+              :state="device.state"
               :room="device.room"
-              :isOn="device.state.status === 'playing' ? true : false"
+              :isOn="device.state.status" 
               :isFavorite="device.isFavorite"
               :isLocked="device.isLocked"
             />
@@ -109,8 +110,11 @@ watch(
     devicesNoAlarm.value = devices.value.filter(
       (device) => device.type.name !== "alarm"
     );
+
   }
 );
+
+
 
 //console.log(devices)
 </script>

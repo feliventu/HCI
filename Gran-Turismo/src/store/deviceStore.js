@@ -46,8 +46,8 @@ export const useDeviceStore = defineStore("device", () => {
         return result;
     }
 
-    async function actionDevice(device, action) {
-        await DeviceApi.actionDevice(device, action);
+    async function actionDevice(device, action, params = []) {
+        await DeviceApi.actionDevice(device, action, params);
     }
 
     return {

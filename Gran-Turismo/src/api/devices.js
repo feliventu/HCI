@@ -16,8 +16,8 @@ class DeviceApi extends Api {
         return Api.get(`${Api.baseUrl}/devices`, controller);
     }
 
-    static async actionDevice(device, action, controller){
-        return Api.put(`${Api.baseUrl}/devices/${device.id}/${action}`, device, controller);
+    static async actionDevice(device, action, params = [], controller){
+        return Api.put(`${Api.baseUrl}/devices/${device.id}/${action}`, params ,controller);
     }
 }
 
