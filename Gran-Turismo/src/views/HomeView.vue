@@ -5,12 +5,17 @@
         <v-row class="d-flex justify-space-between mb-n6">
 			<v-col>	<DropButton :items="homes" v-model="actualHome" /></v-col>
 			<v-col class="text-end"><NewButton /></v-col>
-          
+  
         </v-row>
       </div>
 
-      <div>
+      <div v-if="devicesAlarm.length === 0 && devicesNoAlarm.length === 0"> 
+          <WelcomeToHome />
+      </div>
+
+      <div v-if="devicesAlarm && devicesAlarm.length > 0">
         <v-row >
+          
 			<v-col>	<h2>Alarmas recientes</h2></v-col>
           
         </v-row>
@@ -29,7 +34,7 @@
         </v-row>
       </div>
 
-      <div>
+      <div v-if="false">
         <v-row class="pt-3">
 			<v-col>	<h2>Rutinas recientes</h2></v-col>
        
@@ -39,7 +44,7 @@
         <v-row > </v-row>
       </div>
 
-      <div>
+      <div v-if="devicesNoAlarm && devicesNoAlarm.length > 0">
         
         <v-row class="pt-8">
           <v-col><h2> Dispositivos recientes </h2></v-col>
@@ -70,6 +75,7 @@
       </div>
     </v-main>
   </v-app>
+
 </template>
 
 <script setup>
@@ -83,6 +89,7 @@ import { watch } from "vue";
 
 
 
+
 const actualHome = ref();
 
 const homeStore = useHomeStore();
@@ -91,7 +98,7 @@ const devicesStore = useDeviceStore();
 
 const homes = ref([]);
 
-const devices = ref([]);
+const devicesByRoom = ref([]);
 let devicesAlarm = ref([]);
 let devicesNoAlarm = ref([]);
 
@@ -100,20 +107,21 @@ onMounted(async () => {
   if (homes.value != null) {
     actualHome.value = homes.value[0];
   }
-});
+
+  });
+ 
 
   async function updateHomeView(){
     const roomName = `${actualHome.value} Room`;
-    devices.value = await roomStore.getDevicesFromRoom(roomName);
+    devicesByRoom.value = await roomStore.getDevicesFromRoom(roomName);
 
-    devicesAlarm.value = devices.value.filter(
+    devicesAlarm.value = devicesByRoom.value.filter(
       (device) => device.type.name === "alarm"
     );
-    devicesNoAlarm.value = devices.value.filter(
+    devicesNoAlarm.value = devicesByRoom.value.filter(
       (device) => device.type.name !== "alarm"
     );
   }
-
 
   watch(
   () => actualHome.value ,
@@ -132,7 +140,6 @@ watch(
 
 
 
-
 //console.log(devices)
 </script>
 
@@ -141,4 +148,6 @@ watch(
   padding-right: 0 !important;
   margin-right: 0 !important;
 }
+
+
 </style>
