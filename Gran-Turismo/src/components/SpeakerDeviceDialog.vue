@@ -27,24 +27,32 @@
 }
 </style>
 
-<script>
-export default {
-  name: "SpeakerDeviceDialog",
-  props: {
-    typeId: String,
+
+<script setup>
+  import { ref, onMounted } from 'vue';
+  import { useDeviceStore } from '@/store/deviceStore';
+
+  const props = defineProps({
     id: String,
-    dialogVisible: Boolean,
-  },
-  methods: {
-    updateDialog(value) {
-      this.$emit("update:modelValue", value);
-    },
-    closeDialog() {
-      this.$emit("update:modelValue", false);
-    },
-  },
-};
+  });
+
+  const deviceStore = useDeviceStore();
+  const device = ref(null);
+  onMounted(async () => {
+  device.value = await deviceStore.getDeviceById(props.id);
+});
 
 
 
+
+const emit = defineEmits(["update:modelValue"]);
+
+  const updateDialog = (value) => {
+    emit("update:modelValue", value);
+  };
+
+  const closeDialog = () => {
+    emit("update:modelValue", false);
+  };
 </script>
+

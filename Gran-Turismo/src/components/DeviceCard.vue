@@ -27,7 +27,8 @@
             <span class="subtitle-c" v-if="type === 'ac'">{{ state.temperature}}°C</span>
             <span class="subtitle-c" v-if="type === 'speaker'">{{ state.volume}}%</span>
 			      <span class="subtitle-c" v-if="type === 'blinds'">Apertura maxima: {{ setLevel }}%</span>
-                  <span class="subtitle-c" v-if="type === 'blinds'">Apertura actual: {{ localCurrentLevel}}%</span>
+            <span class="subtitle-c" v-if="type === 'blinds'">Apertura actual: {{ localCurrentLevel}}%</span>
+            
           </div>
           </template>
         </v-card-item>
@@ -53,14 +54,15 @@
 		  
         </v-row>
 		
-		<v-row class="mb-0 bg-black">
+		<v-row class="mb-0">
       <v-btn 
 		v-if="type == 'blinds'"
-		density="compact" 
+		density="comfortable" 
 		class="custom-button-card "
 		elevation="0"
 		@click.stop="openCloseBlinds"
-   
+    max-width="80px"
+      :class="smaller-text"
      > Action</v-btn>
 
 		</v-row>
@@ -70,6 +72,7 @@
         <v-switch
 		v-if="type !== 'blinds'"
           inset
+          
           hide-details
           :model-value="switchIsOn"
           :v-model="localIsOn"
@@ -85,18 +88,17 @@
     </v-row>
   </v-card>
 
-  <SpeakerDeviceDialog v-if="type === 'speaker'" v-model="dialogVisible1">
+  <SpeakerDeviceDialog v-if="type === 'speaker'" v-model="dialogVisible1" >
   </SpeakerDeviceDialog>
   <AcDeviceDialog v-if="type === 'ac'" v-model="dialogVisible1">
   </AcDeviceDialog>
-  <BlindsDeviceDialog v-if="type === 'blinds'" v-model="dialogVisible1">
+  <BlindsDeviceDialog v-if="type === 'blinds'"   v-model="dialogVisible1" :id="id" :canDelete="true">
   </BlindsDeviceDialog>
 </template>
 
 <script setup>
 import { useDeviceStore } from "@/store/deviceStore";
-import { onMounted, ref } from "vue";
-import { watch } from "vue";
+import { ref, onMounted, onUnmounted } from "vue";
 
 const props = defineProps({
   id: String,
@@ -110,61 +112,59 @@ const props = defineProps({
 });
 
 const dialogVisible1 = ref(false);
-
 const deviceStore = useDeviceStore();
-let localIsOn = ref(props.isOn)
-let switchIsOn
-if(localIsOn.value === "on" || localIsOn.value === "playing" ){
-  switchIsOn = true;
-}
-else{
-  switchIsOn = false;
-}
 
-let localCurrentLevel = ref(0);
-let setLevel = ref(0);
+let localIsOn = ref(props.isOn);
+let switchIsOn = ref(localIsOn.value === "on" || localIsOn.value === "playing");
+let localCurrentLevel = ref(props.state.currentLevel || 0);
+let setLevel = ref(props.state.level || 0);
 
-if(props.type === 'blinds'){
-localCurrentLevel = ref(props.state.currentLevel);
-setLevel = ref(props.state.level)
+const fetchDeviceState = async () => {
+  const device = await deviceStore.getDeviceById(props.id);
+  if (props.type === 'blinds') {
+    localCurrentLevel.value = device.state.currentLevel;
+    setLevel.value = device.state.level;
+  }
+  if (props.type === 'ac') {
+    props.state.temperature = device.state.temperature;
+  }
+  if (props.type === 'speaker') {
+    props.state.volume = device.state.volume;
+  }
+  localIsOn.value = device.state.isOn;
+  switchIsOn.value = (localIsOn.value === "on" || localIsOn.value === "playing");
+};
 
-}
+onMounted(() => {
+  fetchDeviceState();
+  const interval = setInterval(fetchDeviceState, 3000); // Poll every 5 seconds
 
-watch(localCurrentLevel, async (newLevel) => {
-    localCurrentLevel.value = newLevel;
-
+  // Cleanup interval on unmount
+  onUnmounted(() => {
+    clearInterval(interval);
+  });
 });
 
-
-async function openCloseBlinds(){
+async function openCloseBlinds() {
   const device = await deviceStore.getDeviceById(props.id);
-
-  if(localCurrentLevel.value === 0){
-     await deviceStore.actionDevice(device,'close')
-  }
-  else if(localCurrentLevel.value === setLevel.value){
-    await deviceStore.actionDevice(device,'open')
+  if (localCurrentLevel.value === 0) {
+    await deviceStore.actionDevice(device, 'close');
+  } else if (localCurrentLevel.value === setLevel.value) {
+    await deviceStore.actionDevice(device, 'open');
   }
 }
 
-
-
-
 async function toggleDevice() {
-
   const device = await deviceStore.getDeviceById(props.id);
-  if(switchIsOn === false){
-    switchIsOn = true;
-    const startAction = (props.type === "speaker") ? 'play' : (props.type === "ac") ? 'turnOn' : '';
-
-    await deviceStore.actionDevice(device,startAction);
+  if (switchIsOn.value === false) {
+    switchIsOn.value = true;
+    const startAction = props.type === "speaker" ? 'play' : props.type === "ac" ? 'turnOn' : '';
+    await deviceStore.actionDevice(device, startAction);
+  } else if (switchIsOn.value === true) {
+    switchIsOn.value = false;
+    const stopAction = props.type === "speaker" ? 'stop' : props.type === "ac" ? 'turnOff' : '';
+    await deviceStore.actionDevice(device, stopAction);
   }
-  else if(switchIsOn === true){
-    localIsOn = false;
-    const stopAction = (props.type === "speaker") ? 'stop' : (props.type === "ac") ? 'turnOff' : '';
-    await deviceStore.actionDevice(device,stopAction);
-  }
-  
 }
 
 const icon = ref("mdi-speaker");
@@ -183,6 +183,7 @@ onMounted(() => {
 </script>
 
 
+
 <style>
 .v-card.border-radius {
   border-radius: 10px;
@@ -194,7 +195,9 @@ onMounted(() => {
   opacity: 1; /* Change the opacity here */
 }
 
-
+.smaller-text {
+  font-size: 12px; 
+}
 .custom-button-card {
 	border-radius: 10px !important;
 	background-color: lightgray !important;

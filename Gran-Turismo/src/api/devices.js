@@ -19,6 +19,10 @@ class DeviceApi extends Api {
     static async actionDevice(device, action, params = [], controller){
         return Api.put(`${Api.baseUrl}/devices/${device.id}/${action}`, params ,controller);
     }
+
+    static async deleteDevice(device, controller) {
+        return Api.delete(`${Api.baseUrl}/devices/${device.id}`, controller);
+    }
 }
 
 class Device {

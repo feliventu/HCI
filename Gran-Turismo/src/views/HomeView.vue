@@ -51,7 +51,7 @@
             cols="12"
             sm="6"
             md="4"
-            lg="2"
+            lg="3"
             class="d-flex justify-space-between"
           >
             <DeviceCard
@@ -80,6 +80,8 @@ import { useRoomStore } from "@/store/roomStore";
 import { ref, onMounted } from "vue";
 import { watch } from "vue";
 
+
+
 const actualHome = ref();
 
 const homeStore = useHomeStore();
@@ -98,7 +100,8 @@ onMounted(async () => {
   }
 });
 
-watch(
+
+  watch(
   () => actualHome.value,
   async (newValue) => {
     const roomName = `${actualHome.value} Room`;
@@ -110,7 +113,6 @@ watch(
     devicesNoAlarm.value = devices.value.filter(
       (device) => device.type.name !== "alarm"
     );
-
   }
 );
 

@@ -50,6 +50,11 @@ export const useDeviceStore = defineStore("device", () => {
         await DeviceApi.actionDevice(device, action, params);
     }
 
+    async function deleteDevice(device){
+        await DeviceApi.deleteDevice(device);
+        await getDevices();
+    }
+    
     return {
         devices,
         deviceTypes,
@@ -59,5 +64,6 @@ export const useDeviceStore = defineStore("device", () => {
         add,
         getDeviceById,
         actionDevice,
+        deleteDevice,
     };
 });
