@@ -9,7 +9,10 @@
           </v-row>
         </div>
   
-        <div>
+        <div v-if="devicesAlarm.length === 0 && devicesNoAlarm.length === 0"> 
+            <WelcomeToHome />
+        </div>
+        <div v-if="devicesAlarm && devicesAlarm.length > 0">
           <v-row >
               <v-col>	<h2>Alarmas</h2></v-col>
             
@@ -31,7 +34,7 @@
   
 
   
-        <div>
+        <div v-if="devicesNoAlarm && devicesNoAlarm.length > 0">
           
           <v-row class="pt-4">
             <v-col><h2> Dispositivos</h2></v-col>
@@ -47,14 +50,15 @@
               class="d-flex justify-space-between"
             >
               <DeviceCard
-                :key="device.id"
-                :id="device.id"
-                :name="device.name"
-                :type="device.type.name"
-                :room="device.room"
-                :isOn="device.state.status === 'playing' ? true : false"
-                :isFavorite="device.isFavorite"
-                :isLocked="device.isLocked"
+              :key="device.id"
+              :id="device.id"
+              :name="device.name"
+              :type="device.type.name"
+              :state="device.state"
+              :room="device.room"
+              :isOn="device.state.status" 
+              :isFavorite="device.isFavorite"
+              :isLocked="device.isLocked"
               />
             </v-col>
           </v-row>
@@ -78,7 +82,7 @@
   
   const homes = ref([]);
   
-  const devices = ref([]);
+  const devicesByRoom = ref([]);
   let devicesAlarm = ref([]);
   let devicesNoAlarm = ref([]);
   
@@ -93,18 +97,18 @@
     () => actualHome.value,
     async (newValue) => {
       const roomName = `${actualHome.value} Room`;
-      devices.value = await roomStore.getDevicesFromRoom(roomName);
+      devicesByRoom.value = await roomStore.getDevicesFromRoom(roomName);
   
-      devicesAlarm.value = devices.value.filter(
+      devicesAlarm.value = devicesByRoom.value.filter(
         (device) => device.type.name === "alarm"
       );
-      devicesNoAlarm.value = devices.value.filter(
+      devicesNoAlarm.value = devicesByRoom.value.filter(
         (device) => device.type.name !== "alarm"
       );
     }
   );
   
-  //console.log(devices)
+
   </script>
   
   <style>

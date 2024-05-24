@@ -140,7 +140,6 @@ watch(
 
 
 
-//console.log(devices)
 </script>
 
 <style>
