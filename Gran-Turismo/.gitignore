@@ -2,6 +2,7 @@
 node_modules
 /dist
 /api
+/API
 !gran-turismo/src/api/
 
 # local env files
