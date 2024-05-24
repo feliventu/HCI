@@ -75,6 +75,7 @@
 <script setup>
 import AlarmCard from "@/components/AlarmCard.vue";
 import DropButton from "@/components/DropButton.vue";
+import { useDeviceStore } from "@/store/deviceStore";
 import { useHomeStore } from "@/store/homeStore";
 import { useRoomStore } from "@/store/roomStore";
 import { ref, onMounted } from "vue";
@@ -86,6 +87,7 @@ const actualHome = ref();
 
 const homeStore = useHomeStore();
 const roomStore = useRoomStore();
+const devicesStore = useDeviceStore();
 
 const homes = ref([]);
 
@@ -100,10 +102,7 @@ onMounted(async () => {
   }
 });
 
-
-  watch(
-  () => actualHome.value,
-  async (newValue) => {
+  async function updateHomeView(){
     const roomName = `${actualHome.value} Room`;
     devices.value = await roomStore.getDevicesFromRoom(roomName);
 
@@ -114,7 +113,23 @@ onMounted(async () => {
       (device) => device.type.name !== "alarm"
     );
   }
+
+
+  watch(
+  () => actualHome.value ,
+  async (newValue) => {
+    updateHomeView();
+  }
 );
+
+watch(
+  () => devicesStore.devices,
+  async (newValue) => {
+    updateHomeView();
+  }
+  );
+
+
 
 
 
