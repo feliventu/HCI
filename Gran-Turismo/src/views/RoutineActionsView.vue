@@ -1,7 +1,27 @@
 <template>
     <div class="px-12 pt-5">
         <h2>Acciones para rutina: {{ name }} (hogar '{{ home }}')</h2>
-        <v-btn @click="openDialog(null)" class="mt-4">Agregar accion</v-btn>
+        <RoutineCard
+            class="mx-0"
+            :description="description"
+            :routine="name"
+            :devices="devices"
+            :expanded="true"
+        />
+        <v-btn
+            class="custom-button mt-5"
+            variant="outlined"
+            height="40px"
+            @click="openDialog(null)"
+            >Agregar accion</v-btn
+        >
+        <v-btn
+            class="custom-button mt-5 bg-green"
+            variant="outlined"
+            height="40px"
+            @click="createRoutine()"
+            >Crear rutina</v-btn
+        >
         <v-dialog v-model="showDialog" max-width="600px">
             <v-card>
                 <v-card-title>Crear nueva accion</v-card-title>
@@ -33,6 +53,9 @@
                 </v-card-actions>
             </v-card>
         </v-dialog>
+        <p v-if="createFailed" class="pt-1 text-red" error>
+            Necesitas tener minimo una accion para crear la rutina.
+        </p>
     </div>
 </template>
 
@@ -54,6 +77,7 @@ const selectedDevice = ref(null);
 const selectedDeviceId = ref(null);
 const currentComponent = shallowRef(null);
 const actions = ref([]);
+const createFailed = ref(false);
 
 const roomStore = useRoomStore();
 
@@ -61,6 +85,14 @@ onMounted(async () => {
     await loadDevices();
 });
 
+const createRoutine = () => {
+    if (actions.value.length === 0) {
+        console.log("womp womp");
+        createFailed.value = true;
+    } else {
+        // create routine and jump to the routines route.
+    }
+};
 const loadDevices = async () => {
     if (props.home) {
         try {

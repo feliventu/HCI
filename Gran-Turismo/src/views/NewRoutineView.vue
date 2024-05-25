@@ -10,7 +10,6 @@
                 v-model="name"
             ></v-text-field>
             <v-text-field
-                class="pt-5"
                 label="Descripcion"
                 style="max-width: 300px"
                 variant="outlined"
@@ -30,7 +29,7 @@
                 height="40px"
                 @click="navigateToActions()"
                 :disabled="!canCreate"
-                >Agregar</v-btn
+                >Continuar</v-btn
             >
         </form>
     </div>
