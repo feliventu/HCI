@@ -48,7 +48,7 @@
 
       <div v-if="devicesNoAlarm && devicesNoAlarm.length > 0">
         
-        <v-row class="pt-8">
+        <v-row class="pt-5">
           <v-col><h2> Dispositivos recientes </h2></v-col>
         </v-row>
         <v-row class="mt-n4">

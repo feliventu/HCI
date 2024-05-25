@@ -6,13 +6,15 @@
   >
     <v-card class="border-radius">
       <v-card-title>{{ device.name }}</v-card-title>
-      <span class="subtitle-c ml-4" >Genero: {{device.state.genre}}</span>
       <span class="subtitle-c ml-4" v-if="device.state.status == 'stopped'">Apagado</span> 
-      <div v-else>
+      <span class="subtitle-c ml-4" >Genero: {{device.state.genre}}</span>
+      <span class="d-flex subtitle-c ml-4">Volumen: {{ device.state.volume }}/10</span>
+      
+      <div v-if="device.state.status != 'stopped'">
       <span class="d-flex subtitle-c ml-4">Cancion actual: {{ device.state.song.title }}</span>
       <span class="d-flex subtitle-c ml-4" v-if="device.state.status === 'paused'">Estado: Pausado</span>
       <span class="d-flex subtitle-c ml-4" v-if="device.state.status === 'playing'">Estado: Activo</span>
-      <span class="d-flex subtitle-c ml-4">Volumen: {{ device.state.volume }}</span>
+      
       </div>
       <div class="d-flex mt-4">
         <v-text-field
@@ -39,7 +41,7 @@
       </div>
 
       <div v-if="device.state.status !='stopped'" >
-        <div class="d-flex mb-3">
+        <div class="d-flex mb-4">
           <v-btn
             class="custom-button mt-0 ml-3"
             variant="outlined"
@@ -71,7 +73,7 @@
             @click="nextSong()"
           ></v-btn>
         </div>
-        <div class="d-flex mb-4">
+        <div class="d-flex mb-3">
           <v-btn
             class="custom-button mt-0 ml-3"
             variant="outlined"
@@ -97,7 +99,7 @@
 
       <div class="d-flex">
       <v-select
-                class="ml-4 mt-4"
+                class="ml-4 mt-2"
                 label="Generos"
                 style="max-width: 180px"
                 :items="supportedValues"   
@@ -111,16 +113,17 @@
           height="40px"
           @click="changeGenre()"
           :disabled="!canChangeGenre"
-          >Cambiar Genero
+          >Cambiar
           </v-btn>
       </div>
       <v-card-actions>
         <v-spacer>
           <v-btn 
-          class="bg-red "
-          variant= "text" 
-          @click="deleteDevice()"
-          text="Borrar"
+          class="ml-2"
+            color="red"
+            variant="text"
+            @click="dialogVisibleDelete = true"
+            text="Borrar"
           >
           </v-btn>
         </v-spacer>
@@ -129,6 +132,38 @@
 
       <!-- You can add more content here -->
     </v-card>
+
+
+    <v-dialog max-width="500" v-model="dialogVisibleDelete">
+      <template v-slot:default="{ isActive }">
+        <v-card title="Borrar dispositivo" class="border-radius">
+          <v-card-text> Seguro que desea borrar el dispositivo? </v-card-text>
+
+          <v-card-actions>
+            <v-spacer></v-spacer>
+
+            <v-btn text="Borrar" class="bg-red" @click="deleteDevice"></v-btn>
+            <v-btn text="Cancelar" @click="isActive.value = false"></v-btn>
+          </v-card-actions>
+        </v-card>
+      </template>
+    </v-dialog>
+
+    <div>
+    <v-snackbar v-model="snackbar" :timeout="timeout" color="primary">
+      {{ text }}
+      <template v-slot:actions>
+        <v-btn
+          class="mr-n1"
+          color="black"
+          variant="text"
+          @click="snackbar = false"
+        >
+          Cerrar
+        </v-btn>
+      </template>
+    </v-snackbar>
+  </div>
   </v-dialog>
 </template>
 
@@ -145,6 +180,11 @@ const props = defineProps({
 
 const deviceStore = useDeviceStore();
 const device = ref(null);
+
+const snackbar = ref(false);
+const timeout = ref(4000);
+const text = ref("Dispositivo agregado");
+const dialogVisibleDelete = ref(false);
 
 const newVolume = ref(null);
 const newGenre = ref(null);
@@ -212,11 +252,15 @@ async function changeGenre(){
   console.log(newGenre.value)
   await deviceStore.actionDevice(device.value, "setGenre", [newGenre.value]);
   newGenre.value = null;
+  text.value = "Genero cambiado";
+  snackbar.value = true;
 }
 
 async function setVolume(){
   await deviceStore.actionDevice(device.value, "setVolume", [newVolume.value]);
   newVolume.value = null;
+  text.value = "Volumen cambiado";
+  snackbar.value = true;
 }
 
 async function resumeSong(){
