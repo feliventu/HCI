@@ -25,7 +25,7 @@
             <div style="display: flex; flex-direction: column">
             
             <span class="subtitle-c" v-if="type === 'ac'">{{ state.temperature}}°C</span>
-            <span class="subtitle-c" v-if="type === 'speaker'">{{ state.volume}}%</span>
+            <span class="subtitle-c" v-if="type === 'speaker' && isOn=='stopped' ">{{state.volume}}</span>
 			      <span class="subtitle-c" v-if="type === 'blinds'">Apertura maxima: {{ setLevel }}%</span>
             <span class="subtitle-c" v-if="type === 'blinds'">Apertura actual: {{ localCurrentLevel}}%</span>
             
@@ -88,9 +88,9 @@
     </v-row>
   </v-card>
 
-  <SpeakerDeviceDialog v-if="type === 'speaker'" v-model="dialogVisible1" >
+  <SpeakerDeviceDialog v-if="type === 'speaker'" v-model="dialogVisible1" :id="id" :canDelete="true" >
   </SpeakerDeviceDialog>
-  <AcDeviceDialog v-if="type === 'ac'" v-model="dialogVisible1">
+  <AcDeviceDialog v-if="type === 'ac'" v-model="dialogVisible1" :id="id" :canDelete="true">
   </AcDeviceDialog>
   <BlindsDeviceDialog v-if="type === 'blinds'"   v-model="dialogVisible1" :id="id" :canDelete="true">
   </BlindsDeviceDialog>
@@ -119,6 +119,7 @@ let switchIsOn = ref(localIsOn.value === "on" || localIsOn.value === "playing");
 let localCurrentLevel = ref(props.state.currentLevel || 0);
 let setLevel = ref(props.state.level || 0);
 
+
 const fetchDeviceState = async () => {
   const device = await deviceStore.getDeviceById(props.id);
   if (props.type === 'blinds') {
@@ -132,7 +133,7 @@ const fetchDeviceState = async () => {
     props.state.volume = device.state.volume;
   }
   localIsOn.value = device.state.isOn;
-  switchIsOn.value = (localIsOn.value === "on" || localIsOn.value === "playing");
+
 };
 
 onMounted(() => {

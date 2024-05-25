@@ -1,7 +1,7 @@
 <template>
 
   <v-app>
-    <img v-if="loading" class="loading" :src="getImageUrl('ajax-loader.gif')" />
+    <img v-if="loading" class="loading" :src="getImageUrl('loader.gif')" />
     <v-main v-if="!loading" class="px-12 pt-5">
       <div>
         <v-row class="d-flex justify-space-between mb-n6">
@@ -119,7 +119,7 @@ onMounted(async () => {
   if (homes.value != null) {
     actualHome.value = homes.value[0];
   }
-  setTimeout(() => {loading.value = false}, 500);
+  setTimeout(() => {loading.value = false}, 1500);
   
   });
 
@@ -173,8 +173,8 @@ watch(
   top: 30%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 100px;
-  height: 100px;
+  width: 400px;
+  height: 400px;
   animation: spin 2s linear infinite;
 }
 

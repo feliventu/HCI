@@ -1,6 +1,6 @@
 <template>
     <v-app>
-      <img v-if="loading" class="loading" :src="getImageUrl('ajax-loader.gif')" />
+      <img v-if="loading" class="loading" :src="getImageUrl('loader.gif')" />
       <v-main v-if="!loading" class="px-12 pt-5">
         <div>
           <v-row class="d-flex justify-space-between mb-n6">
