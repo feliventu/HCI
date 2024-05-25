@@ -1,6 +1,8 @@
 <template>
+
   <v-app>
-    <v-main class="px-12 pt-5">
+    <img v-if="loading" class="loading" :src="getImageUrl('ajax-loader.gif')" />
+    <v-main v-if="!loading" class="px-12 pt-5">
       <div>
         <v-row class="d-flex justify-space-between mb-n6">
 			<v-col>	<DropButton :items="homes" v-model="actualHome" /></v-col>
@@ -10,7 +12,7 @@
       </div>
 
       <div v-if="devicesAlarm.length === 0 && devicesNoAlarm.length === 0"> 
-          <WelcomeToHome />
+          <WelcomeWaifu :title="'Comencemos con tu nueva casa inteligente'" :waifu="'Home'"/>
       </div>
 
       <div v-if="devicesAlarm && devicesAlarm.length > 0">
@@ -84,7 +86,7 @@ import DropButton from "@/components/DropButton.vue";
 import { useDeviceStore } from "@/store/deviceStore";
 import { useHomeStore } from "@/store/homeStore";
 import { useRoomStore } from "@/store/roomStore";
-import { ref, onMounted } from "vue";
+import { ref, onMounted, onBeforeMount } from "vue";
 import { watch } from "vue";
 
 
@@ -102,16 +104,34 @@ const devicesByRoom = ref([]);
 let devicesAlarm = ref([]);
 let devicesNoAlarm = ref([]);
 
+const loading = ref(true);
+/*
+onBeforeMount(async()=>{
+  loading.value = true;
+  setTimeout(() => console.log("cargando"), 3000);
+  loading.value = false;
+});
+*/
+
 onMounted(async () => {
+ loading.value = true;
   homes.value = (await homeStore.get()).map((home) => home.name);
   if (homes.value != null) {
     actualHome.value = homes.value[0];
   }
-
+  setTimeout(() => {loading.value = false}, 500);
+  
   });
+
+  function getImageUrl(name) {
+    return new URL(`../assets/${name}`, import.meta.url).href
+}
  
 
   async function updateHomeView(){
+    if(actualHome.value == null){
+      return;
+    }
     const roomName = `${actualHome.value} Room`;
     devicesByRoom.value = await roomStore.getDevicesFromRoom(roomName);
 
@@ -148,5 +168,14 @@ watch(
   margin-right: 0 !important;
 }
 
+.loading{
+  position: absolute;
+  top: 30%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100px;
+  height: 100px;
+  animation: spin 2s linear infinite;
+}
 
 </style>
