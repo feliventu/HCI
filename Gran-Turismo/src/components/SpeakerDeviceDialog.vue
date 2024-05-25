@@ -10,19 +10,18 @@
         <v-text-field
           class="ml-4"
           type="input"
-          label="Apertura Maxima"
+          label="Volumen"
           style="max-width: 180px"
           variant="outlined"
-          v-model="newLevel"
+          v-model="newVolume"
         ></v-text-field>
         <v-btn
           class="custom-button mt-2 ml-3"
           variant="outlined"
           height="40px"
-          @click="changeLevel()"
+          @click="setVolume()"
           :disabled="!canCreate"
-          >Cambiar</v-btn
-        >
+          >Cambiar</v-btn>
       </div>
       <v-card-actions>
         <v-spacer>
@@ -48,6 +47,7 @@ import { ref, onMounted } from "vue";
 import { useDeviceStore } from "@/store/deviceStore";
 import { computed } from "vue";
 
+
 const props = defineProps({
   id: String,
   canDelete: Boolean,
@@ -56,15 +56,25 @@ const props = defineProps({
 const deviceStore = useDeviceStore();
 const device = ref(null);
 const newLevel = ref(null);
-onMounted(async () => {
+
+
+
+const fetchSpeakerState = async () => {
   device.value = await deviceStore.getDeviceById(props.id);
+};
+
+
+onMounted(async () => {
+  fetchSpeakerState();
+  const interval = setInterval(fetchDeviceState, 3000); // Poll every 5 seconds
+
+  // Cleanup interval on unmount
+  onUnmounted(() => {
+    clearInterval(interval);
+  });
 });
 
-async function changeLevel() {
-  await deviceStore.actionDevice(device.value,'setLevel', [newLevel.value]);
-  newLevel.value = null;
-  closeDialog();
-}
+
 
 async function deleteDevice() {
   await deviceStore.deleteDevice(device.value,'delete');
@@ -78,6 +88,8 @@ const canCreate = computed(() => {
 async function setVolume(){
 
 }
+
+
 
 
 const emit = defineEmits(["update:modelValue"]);

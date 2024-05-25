@@ -25,8 +25,9 @@
             <div style="display: flex; flex-direction: column">
             
             <span class="subtitle-c" v-if="type === 'ac'">{{ state.temperature}}°C</span>
-            <span class="subtitle-c" v-if="type === 'speaker' && isOn=='stopped' ">{{state.volume}}</span>
-			      <span class="subtitle-c" v-if="type === 'blinds'">Apertura maxima: {{ setLevel }}%</span>
+            <span class="subtitle-c" v-if="type === 'speaker' && localIsOn=='stopped'" >Apagado</span>
+            <span class="subtitle-c" v-if="type === 'speaker' && localIsOn=='playing'" >Cancion Actual: {{ localSong }}</span>
+            <span class="subtitle-c" v-if="type === 'blinds'">Apertura maxima: {{ setLevel }}%</span>
             <span class="subtitle-c" v-if="type === 'blinds'">Apertura actual: {{ localCurrentLevel}}%</span>
             
           </div>
@@ -116,6 +117,12 @@ const deviceStore = useDeviceStore();
 
 let localIsOn = ref(props.isOn);
 let switchIsOn = ref(localIsOn.value === "on" || localIsOn.value === "playing");
+
+//variables de speaker
+let localSong = ref(null)
+
+
+//variables de blinds
 let localCurrentLevel = ref(props.state.currentLevel || 0);
 let setLevel = ref(props.state.level || 0);
 
@@ -125,15 +132,18 @@ const fetchDeviceState = async () => {
   if (props.type === 'blinds') {
     localCurrentLevel.value = device.state.currentLevel;
     setLevel.value = device.state.level;
+    return
   }
   if (props.type === 'ac') {
     props.state.temperature = device.state.temperature;
   }
   if (props.type === 'speaker') {
     props.state.volume = device.state.volume;
+    props.state = device.state
+    if(device.state.status === 'playing')
+    localSong.value = device.state.song.title;
   }
-  localIsOn.value = device.state.isOn;
-
+  localIsOn.value = device.state.status;
 };
 
 onMounted(() => {
