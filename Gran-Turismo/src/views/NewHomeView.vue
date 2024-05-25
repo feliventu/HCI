@@ -18,17 +18,35 @@
 				>Crear</v-btn
 			>
 
-			<v-btn
-				class="custom-button"
-				variant="outlined"
-				height="40px"
-				@click="getHomes()"
 				
-				>Listar</v-btn
-			>			
 			
 		</form>
+
+
+
+		<v-snackbar
+      v-model="snackbar"
+      :timeout="timeout"
+      color="primary"
+    >
+      {{ text }}
+
+      <template v-slot:actions>
+        <v-btn
+        class="mr-n1"
+          color="black"
+          variant="text"
+          @click="snackbar = false"
+        >
+        Cerrar
+        </v-btn>
+      </template>
+    </v-snackbar>
 	</div>
+
+
+
+	
 </template>
 
 <script setup>
@@ -46,6 +64,10 @@ const home = ref(null);
 const room = ref(null);
 
 const name = ref(null);
+
+const snackbar = ref(false);
+const timeout = ref(4000);
+const text = ref("Hogar creado");
 
 const canCreate = computed(() => {
 		return name.value != null && name.value.length > 0;
@@ -65,6 +87,7 @@ async function addHome() {
 	await useHomeStore().addRoomtoHome(home.value, room.value);
 
 	name.value = null;
+	snackbar.value = true;
 }
 
 

@@ -7,16 +7,30 @@
     <v-card class="border-radius">
       <v-card-title>{{ device.name }}</v-card-title>
       <div class="d-flex">
-      <span class="subtitle-c ml-4 " v-if="device.state.status === 'closed'">Cortina cerrada</span> 
-      <span class="subtitle-c ml-4" v-if="device.state.status === 'opened'">Cortina abierta</span> 
-      <span class="subtitle-c ml-4" v-if="device.state.status === 'closing'">Cerrando cortina</span> 
-      <span class="subtitle-c ml-4 " v-if="device.state.status === 'opening'">Abriendo cortina</span> 
+        <span class="subtitle-c ml-4" v-if="device.state.status === 'closed'"
+          >Cortina abierta</span
+        >
+        <span class="subtitle-c ml-4" v-if="device.state.status === 'opened'"
+          >Cortina cerrada</span
+        >
+        <span class="subtitle-c ml-4" v-if="device.state.status === 'closing'"
+          >Abriendo cortina</span
+        >
+        <span class="subtitle-c ml-4" v-if="device.state.status === 'opening'"
+          >Cerrando cortina</span
+        >
+      </div>
+      <span class="d-flex ml-4 subtitle-c"
+        >Apertura max.: {{ device.state.level }}%</span
+      >
+
+      <div class="justify-content-center mt-3 mb-1">
+        <v-divider length="400px"></v-divider>
       </div>
 
-
       <div class="d-flex flex-column mt-4">
-        
-        <div class="d-flex">  <!-- Wrap "Apertura Maxima" and "Cambiar" button in a flex row div -->
+        <div class="d-flex">
+          <!-- Wrap "Apertura Maxima" and "Cambiar" button in a flex row div -->
           <v-text-field
             class="ml-4"
             type="input"
@@ -36,16 +50,17 @@
         </div>
 
         <div class="justify-content-center mb-4">
-      <v-divider length="400px"></v-divider>
-      </div>
+          <v-divider length="400px"></v-divider>
+        </div>
 
-        <div class="d-flex">  <!-- Wrap "Action" button in a div -->
+        <div class="d-flex mt-1">
+          <!-- Wrap "Action" button in a div -->
           <v-btn
             density="default"
             class="custom-button ml-4 mb-5"
             elevation="0"
             variant="outlined"
-            max-width="80px"
+            height="40px"
             :disabled="!canOpen"
             @click.stop="openDevice"
           >
@@ -57,22 +72,22 @@
             class="custom-button ml-1 mb-5"
             elevation="0"
             variant="outlined"
-            max-width="80px"
+            height="40px"
             @click.stop="closeDevice"
             :disabled="!canClose"
           >
             Cerrar</v-btn
           >
         </div>
-
       </div>
       <v-card-actions>
         <v-spacer>
-          <v-btn 
-          class="bg-red"
-          variant= "text" 
-          @click="deleteDevice()"
-          text="Borrar"
+          <v-btn
+            class="ml-2"
+            color="red"
+            variant="text"
+            @click="dialogVisibleDelete = true"
+            text="Borrar"
           >
           </v-btn>
         </v-spacer>
@@ -81,7 +96,40 @@
 
       <!-- You can add more content here -->
     </v-card>
+
+    <v-dialog max-width="500" v-model="dialogVisibleDelete">
+      <template v-slot:default="{ isActive }">
+        <v-card title="Borrar dispositivo" class="border-radius">
+          <v-card-text> Seguro que desea borrar el dispositivo? </v-card-text>
+
+          <v-card-actions>
+            <v-spacer></v-spacer>
+
+            <v-btn text="Borrar" class="bg-red" @click="deleteDevice"></v-btn>
+            <v-btn text="Cancelar" @click="isActive.value = false"></v-btn>
+          </v-card-actions>
+        </v-card>
+      </template>
+    </v-dialog>
+
+    <div>
+    <v-snackbar v-model="snackbar" :timeout="timeout" color="primary">
+      {{ text }}
+      <template v-slot:actions>
+        <v-btn
+          class="mr-n1"
+          color="black"
+          variant="text"
+          @click="snackbar = false"
+        >
+          Cerrar
+        </v-btn>
+      </template>
+    </v-snackbar>
+  </div>
   </v-dialog>
+
+ 
 </template>
 
 <script setup>
@@ -95,6 +143,11 @@ const props = defineProps({
   canDelete: Boolean,
 });
 
+const snackbar = ref(false);
+const timeout = ref(4000);
+const text = ref("Dispositivo agregado");
+const dialogVisibleDelete = ref(false);
+
 const deviceStore = useDeviceStore();
 const device = ref(null);
 const newLevel = ref(null);
@@ -105,15 +158,15 @@ onMounted(async () => {
 async function changeLevel() {
   await deviceStore.actionDevice(device.value, "setLevel", [newLevel.value]);
   newLevel.value = null;
-  closeDialog();
+  text.value = "Nivel de cortina cambiado";
+  snackbar.value = true;
 }
 
 async function deleteDevice() {
   await deviceStore.deleteDevice(device.value, "delete");
   closeDialog();
+  
 }
-
-
 
 const fetchBlindState = async () => {
   device.value = await deviceStore.getDeviceById(props.id);
@@ -129,16 +182,25 @@ onMounted(async () => {
   });
 });
 
-const canChange= computed(() => {
-  return newLevel.value &&  newLevel.value != device.value.state.level && newLevel.value >= 0 && newLevel.value <= 100 ;
+const canChange = computed(() => {
+  return (
+    newLevel.value &&
+    newLevel.value != device.value.state.level &&
+    newLevel.value >= 0 &&
+    newLevel.value <= 100
+  );
 });
 
 const canOpen = computed(() => {
-  return 0 === device.value.state.currentLevel ;
+  return 0 === device.value.state.currentLevel;
 });
 
 const canClose = computed(() => {
-  return device.value.state.currentLevel === device.value.state.level && (device.value.state.status !== "opening" && device.value.state.status !== "closing"); 
+  return (
+    device.value.state.currentLevel === device.value.state.level &&
+    device.value.state.status !== "opening" &&
+    device.value.state.status !== "closing"
+  );
 });
 
 const emit = defineEmits(["update:modelValue"]);
@@ -148,15 +210,20 @@ const updateDialog = (value) => {
 };
 
 const closeDialog = () => {
+  
   emit("update:modelValue", false);
 };
 
 async function openDevice() {
   await deviceStore.actionDevice(device.value, "close");
+  text.value = "Abriendo cortina";
+  snackbar.value = true;
 }
 
 async function closeDevice() {
   await deviceStore.actionDevice(device.value, "open");
+  text.value = "Cerrando cortina";
+  snackbar.value = true;
 }
 </script>
 

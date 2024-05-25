@@ -126,10 +126,11 @@
       <v-card-actions>
         <v-spacer>
           <v-btn 
-          class="bg-red "
-          variant= "text" 
-          @click="deleteDevice()"
-          text="Borrar"
+          class="ml-2"
+            color="red"
+            variant="text"
+            @click="dialogVisibleDelete = true"
+            text="Borrar"
           >
           </v-btn>
         </v-spacer>
@@ -138,6 +139,37 @@
 
       <!-- You can add more content here -->
     </v-card>
+
+    <v-dialog max-width="500" v-model="dialogVisibleDelete">
+      <template v-slot:default="{ isActive }">
+        <v-card title="Borrar dispositivo" class="border-radius">
+          <v-card-text> Seguro que desea borrar el dispositivo? </v-card-text>
+
+          <v-card-actions>
+            <v-spacer></v-spacer>
+
+            <v-btn text="Borrar" class="bg-red" @click="deleteDevice"></v-btn>
+            <v-btn text="Cancelar" @click="isActive.value = false"></v-btn>
+          </v-card-actions>
+        </v-card>
+      </template>
+    </v-dialog>
+
+    <div>
+    <v-snackbar v-model="snackbar" :timeout="timeout" color="primary">
+      {{ text }}
+      <template v-slot:actions>
+        <v-btn
+          class="mr-n1"
+          color="black"
+          variant="text"
+          @click="snackbar = false"
+        >
+          Cerrar
+        </v-btn>
+      </template>
+    </v-snackbar>
+  </div>
   </v-dialog>
 </template>
 
@@ -151,6 +183,12 @@ const props = defineProps({
   id: String,
   canDelete: Boolean,
 });
+
+const dialogVisibleDelete = ref(false);
+
+const snackbar = ref(false);
+const timeout = ref(4000);
+const text = ref("Dispositivo agregado");
 
 const deviceStore = useDeviceStore();
 const device = ref(null);
@@ -221,26 +259,36 @@ onMounted(async () => {
 async function changeTemperature() {
   await deviceStore.actionDevice(device.value,'setTemperature', [newTemperature.value]);
   newTemperature.value = null;
+  text.value = "Temperatura cambiada";
+  snackbar.value = true;
 }
 
 async function changeMode() {
   await deviceStore.actionDevice(device.value,'setMode', [newMode.value]);
   newMode.value = null;
+  text.value = "Modo cambiado";
+  snackbar.value = true;
 }
 
 async function changeVerticalSwing() {
   await deviceStore.actionDevice(device.value,'setVerticalSwing', [newVSwing.value]);
   newVSwing.value = null;
+  text.value = "Vertical Swing cambiado";
+  snackbar.value = true;
 }
 
 async function changeHorizontalSwing() {
   await deviceStore.actionDevice(device.value,'setHorizontalSwing', [newHSwing.value]);
   newHSwing.value = null;
+  text.value = "Horizontal Swing cambiado";
+  snackbar.value = true;
 }
 
 async function changeFanSpeed() {
   await deviceStore.actionDevice(device.value,'setFanSpeed', [newFanSpeed.value]);
   newFanSpeed.value = null;
+  text.value = "Velocidad del ventilador cambiada";
+  snackbar.value = true;
 }
 
 async function deleteDevice() {

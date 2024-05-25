@@ -26,7 +26,7 @@ class DeviceApi extends Api {
 }
 
 class Device {
-    constructor(name, id, typeId, isLocked = false, isFavorite = false) {
+    constructor(name, id, typeId, password='', isFavorite = false) {
         this.name = name;
         if(id) {
             this.id = id;
@@ -35,7 +35,7 @@ class Device {
 
         this.meta = {
           
-            isLocked: isLocked,
+            password: password,
             isFavorite: isFavorite,
         };
     }
