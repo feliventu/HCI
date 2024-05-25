@@ -30,7 +30,7 @@
             variant="outlined"
             height="40px"
             @click="changeLevel()"
-            :disabled="!canCreate"
+            :disabled="!canChange"
             >Cambiar</v-btn
           >
         </div>
@@ -129,8 +129,8 @@ onMounted(async () => {
   });
 });
 
-const canCreate = computed(() => {
-  return newLevel.value;
+const canChange= computed(() => {
+  return newLevel.value &&  newLevel.value != device.value.state.level && newLevel.value >= 0 && newLevel.value <= 100 ;
 });
 
 const canOpen = computed(() => {

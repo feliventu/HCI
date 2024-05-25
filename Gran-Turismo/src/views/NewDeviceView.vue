@@ -93,8 +93,9 @@ const canCreate = computed(() => {
 
 async function addDeviceToHome() {
 
+  
     const newDevice = await deviceStore.add(new Device(name.value, null, deviceTypeId.value));
-    
+
     const home = await homeStore.getHomeByName(home1.value);
 
     //dice room pero en realidad es a home xD
@@ -102,7 +103,10 @@ async function addDeviceToHome() {
 
    
     await roomStore.addDeviceToRoom(room[0], newDevice);
-   
+    name.value = null;
+    home1.value = null;
+    deviceTypeId.value = null;
+
 }
 // TEMP (type has to be an object with id)
 </script>

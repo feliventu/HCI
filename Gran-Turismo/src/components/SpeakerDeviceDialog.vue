@@ -34,7 +34,7 @@
           
       </div>
 
-      <div class="justify-content-center mb-4">
+      <div  v-if="device.state.status != 'stopped'" class="justify-content-center mb-4">
       <v-divider length="400px"></v-divider>
       </div>
 
@@ -102,8 +102,6 @@
                 style="max-width: 180px"
                 :items="supportedValues"   
                 v-model="newGenre"
-                item-value="id"
-                item-title="name"
                 variant="outlined"
             >
             </v-select>

@@ -19,20 +19,36 @@
             :icon="icon"
             size="20"
           ></v-icon>
-        <v-card-item :title="name" class="mt-n1">
+        <v-card-item v-if="type === 'blinds'" :title="name" class="mt-n1">
+          
             
           <template v-slot:subtitle>
             <div style="display: flex; flex-direction: column">
-            
-            <span class="subtitle-c" v-if="type === 'ac'">{{ state.temperature}}°C</span>
+              <span class="subtitle-c" v-if="type === 'ac' && (localIsOn =='off')">Apagado</span>
+              <span class="subtitle-c" v-if="type === 'ac' && (localIsOn =='on')">{{ localTemperature}}°C</span>
+                  
             <span class="subtitle-c" v-if="type === 'speaker' && (localSong == null)" >Apagado</span>
             <span class="subtitle-c" v-if="type === 'speaker' && (localSong != null)" >Cancion Actual: {{ localSong }}</span>
-            <span class="subtitle-c" v-if="type === 'blinds'">Apertura maxima: {{ setLevel }}%</span>
-            <span class="subtitle-c" v-if="type === 'blinds'">Apertura actual: {{ localCurrentLevel}}%</span>
+
+            <span class="subtitle-c" v-if="type === 'blinds'">Apertura max.: {{ setLevel }}%</span>
+            <span class="subtitle-c" v-if="type === 'blinds'">Abierta al: {{ localCurrentLevel}}%</span>
             
           </div>
           </template>
         </v-card-item>
+      
+
+        <v-card-item v-if="type !== 'blinds'" :title="name" class="mt-n4">
+          <template v-slot:subtitle>
+            <div style="display: flex; flex-direction: column">
+              <span class="subtitle-c" v-if="type === 'ac' && (localIsOn =='off')">Apagado</span>
+              <span class="subtitle-c" v-if="type === 'ac' && (localIsOn =='on')">{{ localTemperature}}°C</span>
+                  
+            <span class="subtitle-c" v-if="type === 'speaker' && (localSong == null)" >Apagado</span>
+            <span class="subtitle-c" v-if="type === 'speaker' && (localSong != null)" >Cancion Actual: {{ localSong }}</span>
+            </div>
+          </template>
+          </v-card-item>
 
 		
       </v-col>
@@ -55,11 +71,11 @@
 		  
         </v-row>
 		
-		<v-row class="mb-0">
+		<v-row >
       <v-btn 
 		v-if="type == 'blinds'"
 		density="comfortable" 
-		class="custom-button-card "
+		class="custom-button-card mb-3"
 		elevation="0"
 		@click.stop="openCloseBlinds"
     max-width="80px"
@@ -121,6 +137,9 @@ let switchIsOn = ref(localIsOn.value === "on" || localIsOn.value === "playing" |
 let localState = ref(props.state);
 
 
+//variables del aire
+let localTemperature = ref(props.state.temperature || 0);
+
 //variables de speaker
 let localSong = ref(null)
 
@@ -139,7 +158,7 @@ const fetchDeviceState = async () => {
     return
   }
   if (props.type === 'ac') {
-    props.state.temperature = device.state.temperature;
+    localTemperature.value = device.state.temperature;
   }
   if (props.type === 'speaker') {
     if(device.state.status === 'stopped')
