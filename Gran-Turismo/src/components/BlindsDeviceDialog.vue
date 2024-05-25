@@ -6,8 +6,15 @@
   >
     <v-card class="border-radius">
       <v-card-title>{{ device.name }}</v-card-title>
+      <div class="d-flex">
+      <span class="subtitle-c ml-4 " v-if="device.state.status === 'closed'">Cortina cerrada</span> 
+      <span class="subtitle-c ml-4" v-if="device.state.status === 'opened'">Cortina abierta</span> 
+      <span class="subtitle-c ml-4" v-if="device.state.status === 'closing'">Cerrando cortina</span> 
+      <span class="subtitle-c ml-4 " v-if="device.state.status === 'opening'">Abriendo cortina</span> 
+      </div>
 
-      <div class="d-flex flex-column">
+
+      <div class="d-flex flex-column mt-4">
         
         <div class="d-flex">  <!-- Wrap "Apertura Maxima" and "Cambiar" button in a flex row div -->
           <v-text-field
@@ -28,21 +35,31 @@
           >
         </div>
 
+        <div class="justify-content-center mb-4">
+      <v-divider length="400px"></v-divider>
+      </div>
+
         <div class="d-flex">  <!-- Wrap "Action" button in a div -->
           <v-btn
-            density="comfortable"
+            density="default"
             class="custom-button ml-4 mb-5"
             elevation="0"
+            variant="outlined"
             max-width="80px"
+            :disabled="!canOpen"
+            @click.stop="openDevice"
           >
             Abrir</v-btn
           >
 
           <v-btn
-            density="comfortable"
+            density="default"
             class="custom-button ml-1 mb-5"
             elevation="0"
+            variant="outlined"
             max-width="80px"
+            @click.stop="closeDevice"
+            :disabled="!canClose"
           >
             Cerrar</v-btn
           >
@@ -51,12 +68,11 @@
       </div>
       <v-card-actions>
         <v-spacer>
-          <v-btn
-            v-if="canDelete"
-            class="bg-red"
-            variant="text"
-            @click="deleteDevice()"
-            text="Borrar"
+          <v-btn 
+          class="bg-red"
+          variant= "text" 
+          @click="deleteDevice()"
+          text="Borrar"
           >
           </v-btn>
         </v-spacer>
@@ -72,6 +88,7 @@
 import { ref, onMounted } from "vue";
 import { useDeviceStore } from "@/store/deviceStore";
 import { computed } from "vue";
+import { onUnmounted } from "vue";
 
 const props = defineProps({
   id: String,
@@ -96,8 +113,32 @@ async function deleteDevice() {
   closeDialog();
 }
 
+
+
+const fetchBlindState = async () => {
+  device.value = await deviceStore.getDeviceById(props.id);
+};
+
+onMounted(async () => {
+  fetchBlindState();
+  const interval = setInterval(fetchBlindState, 1500); // Poll every 5 seconds
+
+  // Cleanup interval on unmount
+  onUnmounted(() => {
+    clearInterval(interval);
+  });
+});
+
 const canCreate = computed(() => {
   return newLevel.value;
+});
+
+const canOpen = computed(() => {
+  return 0 === device.value.state.currentLevel ;
+});
+
+const canClose = computed(() => {
+  return device.value.state.currentLevel === device.value.state.level && (device.value.state.status !== "opening" && device.value.state.status !== "closing"); 
 });
 
 const emit = defineEmits(["update:modelValue"]);
@@ -109,6 +150,14 @@ const updateDialog = (value) => {
 const closeDialog = () => {
   emit("update:modelValue", false);
 };
+
+async function openDevice() {
+  await deviceStore.actionDevice(device.value, "close");
+}
+
+async function closeDevice() {
+  await deviceStore.actionDevice(device.value, "open");
+}
 </script>
 
 <style>

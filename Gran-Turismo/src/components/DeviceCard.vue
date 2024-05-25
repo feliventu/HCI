@@ -25,8 +25,8 @@
             <div style="display: flex; flex-direction: column">
             
             <span class="subtitle-c" v-if="type === 'ac'">{{ state.temperature}}°C</span>
-            <span class="subtitle-c" v-if="type === 'speaker' && localIsOn=='stopped'" >Apagado</span>
-            <span class="subtitle-c" v-if="type === 'speaker' && localIsOn=='playing'" >Cancion Actual: {{ localSong }}</span>
+            <span class="subtitle-c" v-if="type === 'speaker' && (localSong == null)" >Apagado</span>
+            <span class="subtitle-c" v-if="type === 'speaker' && (localSong != null)" >Cancion Actual: {{ localSong }}</span>
             <span class="subtitle-c" v-if="type === 'blinds'">Apertura maxima: {{ setLevel }}%</span>
             <span class="subtitle-c" v-if="type === 'blinds'">Apertura actual: {{ localCurrentLevel}}%</span>
             
@@ -64,7 +64,8 @@
 		@click.stop="openCloseBlinds"
     max-width="80px"
       :class="smaller-text"
-     > Action</v-btn>
+      :text="actionBlind"
+     > </v-btn>
 
 		</v-row>
 		
@@ -89,17 +90,17 @@
     </v-row>
   </v-card>
 
-  <SpeakerDeviceDialog v-if="type === 'speaker'" v-model="dialogVisible1" :id="id" :canDelete="true" >
+  <SpeakerDeviceDialog v-if="type === 'speaker'" v-model="dialogVisible1" :id="id" >
   </SpeakerDeviceDialog>
-  <AcDeviceDialog v-if="type === 'ac'" v-model="dialogVisible1" :id="id" :canDelete="true">
+  <AcDeviceDialog v-if="type === 'ac'" v-model="dialogVisible1" :id="id" >
   </AcDeviceDialog>
-  <BlindsDeviceDialog v-if="type === 'blinds'"   v-model="dialogVisible1" :id="id" :canDelete="true">
+  <BlindsDeviceDialog v-if="type === 'blinds'"   v-model="dialogVisible1" :id="id">
   </BlindsDeviceDialog>
 </template>
 
 <script setup>
 import { useDeviceStore } from "@/store/deviceStore";
-import { ref, onMounted, onUnmounted } from "vue";
+import { ref, onMounted, onUnmounted, computed } from "vue";
 
 const props = defineProps({
   id: String,
@@ -116,7 +117,9 @@ const dialogVisible1 = ref(false);
 const deviceStore = useDeviceStore();
 
 let localIsOn = ref(props.isOn);
-let switchIsOn = ref(localIsOn.value === "on" || localIsOn.value === "playing");
+let switchIsOn = ref(localIsOn.value === "on" || localIsOn.value === "playing" || localIsOn.value === "paused");
+let localState = ref(props.state);
+
 
 //variables de speaker
 let localSong = ref(null)
@@ -129,6 +132,7 @@ let setLevel = ref(props.state.level || 0);
 
 const fetchDeviceState = async () => {
   const device = await deviceStore.getDeviceById(props.id);
+  localState = device.state;
   if (props.type === 'blinds') {
     localCurrentLevel.value = device.state.currentLevel;
     setLevel.value = device.state.level;
@@ -138,17 +142,18 @@ const fetchDeviceState = async () => {
     props.state.temperature = device.state.temperature;
   }
   if (props.type === 'speaker') {
-    props.state.volume = device.state.volume;
-    props.state = device.state
-    if(device.state.status === 'playing')
+    if(device.state.status === 'stopped')
+    localSong.value = null;
+    else
     localSong.value = device.state.song.title;
   }
+  
   localIsOn.value = device.state.status;
 };
 
 onMounted(() => {
   fetchDeviceState();
-  const interval = setInterval(fetchDeviceState, 3000); // Poll every 5 seconds
+  const interval = setInterval(fetchDeviceState, 1500); // Poll every 5 seconds
 
   // Cleanup interval on unmount
   onUnmounted(() => {
@@ -156,12 +161,25 @@ onMounted(() => {
   });
 });
 
+const actionBlind = computed(() => {
+  if (localCurrentLevel.value === 0) {
+    return "Abrir";
+  } else if (localCurrentLevel.value === setLevel.value) {
+    return "Cerrar";
+  } else {
+    return "---";
+  }
+});
+
 async function openCloseBlinds() {
   const device = await deviceStore.getDeviceById(props.id);
   if (localCurrentLevel.value === 0) {
     await deviceStore.actionDevice(device, 'close');
+   
+
   } else if (localCurrentLevel.value === setLevel.value) {
     await deviceStore.actionDevice(device, 'open');
+    
   }
 }
 
@@ -181,6 +199,8 @@ async function toggleDevice() {
 const icon = ref("mdi-speaker");
 
 onMounted(() => {
+
+
   if (props.type === "speaker") {
     icon.value = "mdi-speaker";
   } else if (props.type === "ac") {
