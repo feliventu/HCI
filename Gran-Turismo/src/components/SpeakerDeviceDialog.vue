@@ -14,8 +14,12 @@
       <span class="d-flex subtitle-c ml-4">Cancion actual: {{ device.state.song.title }}</span>
       <span class="d-flex subtitle-c ml-4" v-if="device.state.status === 'paused'">Estado: Pausado</span>
       <span class="d-flex subtitle-c ml-4" v-if="device.state.status === 'playing'">Estado: Activo</span>
-      
       </div>
+
+      <div class="justify-content-center mt-3">
+      <v-divider length="400px"></v-divider>
+      </div>
+
       <div class="d-flex mt-4">
         <v-text-field
           class="ml-4"
@@ -36,7 +40,7 @@
           
       </div>
 
-      <div  v-if="device.state.status != 'stopped'" class="justify-content-center mb-4">
+      <div v-if="device.state.status != 'stopped'" class="justify-content-center mb-4">
       <v-divider length="400px"></v-divider>
       </div>
 
