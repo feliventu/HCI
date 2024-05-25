@@ -31,7 +31,7 @@
             v-for="device in devicesAlarm"
             :key="device.id"
           >
-            <AlarmCard :name="device.name" />
+            <AlarmCard :id="device.id" :name="device.name" :isArmed="device.state.status"/>
           </v-col>
         </v-row>
       </div>
