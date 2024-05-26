@@ -11,11 +11,7 @@
         <v-row no-gutters>
             <v-col class="routine-color" cols="4">
                 <v-row class="mt-4 mb-0 d-flex justify-center align-center">
-                    <v-icon
-                        class=""
-                        color="icon"
-                        :icon="icon"
-                    ></v-icon>
+                    <v-icon class="" color="icon" :icon="icon"></v-icon>
                 </v-row>
                 <v-row class="mt-0 mb-1 d-flex justify-center align-center">
                     <v-card-title class="routine-title text-body-1">{{
@@ -45,7 +41,7 @@
         </v-row>
     </v-card>
     <v-card
-        v-else="condition === 'grande'"
+        v-if="expanded == true"
         class="d-flex border-radius flex-column h-10000 justify-space-between ma-3"
         height="200"
         width="350"
@@ -56,11 +52,7 @@
         <v-row no-gutters>
             <v-col :class="colorR" cols="4">
                 <v-row class="mt-15 mb-0 d-flex justify-center align-center">
-                    <v-icon
-                        class=""
-                        color="icon"
-                        :icon="icon"
-                    ></v-icon>
+                    <v-icon class="" color="icon" :icon="icon"></v-icon>
                 </v-row>
                 <v-row class="mt-0 mb-1 d-flex justify-center align-center">
                     <v-card-title class="routine-title text-body-1">{{
@@ -73,8 +65,8 @@
                 <v-card-item class="mb-0 wrap">
                     <p class="subtitle">{{ description }}</p>
                     <p class="mt-4 subtitle">Acciones:</p>
-                    <p class="subtitle" v-for="device in devices">
-                      {{  }}  {{ device.actionName }}
+                    <p class="subtitle" v-for="action in devicesActions">
+                        {{}} {{ action.actionName }}
                     </p>
                 </v-card-item>
             </v-col>
@@ -96,29 +88,25 @@
 </template>
 
 <script setup>
+const props = defineProps({
+    id: String,
+    description: String,
+    routine: String,
+    devices: Object,
+    icon: String,
+    color: String,
+    devicesActions: {
+        type: Array,
+        default: () => [],
+    },
+    expanded: Boolean,
+});
 
-const props= defineProps({ 
-        id: String,
-        description: String,
-        routine: String,
-        device: Object,
-        icon: String,
-        color: String,
-        devicesActions: {
-            type: Array,
-            default: () => [],
-        },
-        expanded: Boolean,
-    });
-
-console.log(props.icon)
+console.log(props.devicesActions.actionName);
 const colorR = `bg-${props.color}`;
 </script>
 
-
 <script>
-
-
 export default {
     name: "RutineCard",
     props: {
@@ -154,7 +142,6 @@ export default {
     color: #000000;
 }
 .routine-color {
-    background-color: #FB9F9E;
+    background-color: #fb9f9e;
 }
-
 </style>

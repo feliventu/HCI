@@ -1,12 +1,13 @@
 <template>
     <div class="px-12 pt-5">
-        <h2>Acciones para rutina: {{ name }} (hogar '{{ home }}')</h2>
+        <h2>Acciones para {{ name }} de {{ home }}</h2>
         <RoutineCard
             class="mx-0"
             :id="id"
             :description="description"
             :routine="name"
             :devices="actions"
+            :devicesActions="actions"
             :icon="icon"
             :color="color"
             :expanded="true"
@@ -19,19 +20,20 @@
             >Agregar accion</v-btn
         >
         <v-btn
-            class="custom-button mt-5 bg-green"
+            class="custom-button-green mt-5 "
             variant="outlined"
             height="40px"
             @click="createRoutine()"
-            >Crear rutina</v-btn
+            text="Crear rutina"
+            ></v-btn
         >
         <v-dialog v-model="showDialog" max-width="600px">
-            <v-card>
-                <v-card-title>Crear nueva accion</v-card-title>
+            <v-card class="border-radius">
+                <v-card-title>Agregar nueva accion</v-card-title>
                 <v-card-text>
                     <v-select
                         label="Dispositivo"
-                        style="max-width: 300px"
+                        style="max-width: 250px"
                         :items="homeDevices"
                         item-title="name"
                         item-value="id"
@@ -39,22 +41,16 @@
                         v-model="selectedDeviceId"
                     >
                     </v-select>
-                    <component
+                    <ShowDeviceAction
                         v-if="selectedDeviceId != null"
-                        :is="currentComponent"
                         :deviceId="selectedDeviceId"
                         :actions="actions"
+                        :actionsList="actionsList"
                         @close="showDialog = false"
                     >
-                    </component>
+                    </ShowDeviceAction>
                 </v-card-text>
-                <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn color="primary" @click="addAction">Agregar</v-btn>
-                    <v-btn color="secondary" @click="showDialog = false"
-                        >Cancelar</v-btn
-                    >
-                </v-card-actions>
+
             </v-card>
         </v-dialog>
         <p v-if="createFailed" class="pt-1 text-red" error>
@@ -64,11 +60,11 @@
 </template>
 
 <script setup>
-import { defineProps, ref, shallowRef, onMounted, watch } from "vue";
+import { defineProps, ref, onMounted, watch } from "vue";
 import { useRoomStore } from "@/store/roomStore";
 import { useRoutineStore } from "@/store/routineStore";
 import { Routine } from "@/api/routine";
-import BlindsDeviceAction from "@/components/actions/BlindsDeviceAction.vue";
+import ShowDeviceAction from "@/components/actions/ShowDeviceAction.vue";
 
 const props = defineProps({
     home: String,
@@ -83,9 +79,9 @@ const homeDevices = ref([]);
 const deviceTypeId = ref("");
 const selectedDevice = ref(null);
 const selectedDeviceId = ref(null);
-const currentComponent = shallowRef(null);
 const actions = ref([]);
 const createFailed = ref(false);
+const actionsList = ref([]);
 
 const roomStore = useRoomStore();
 const routineStore = useRoutineStore();
@@ -101,9 +97,16 @@ const createRoutine = async () => {
     } else {
         try {
             await routineStore.add(
-                new Routine(null, props.name, actions.value, props.icon, props.color, props.description),
+                new Routine(
+                    null,
+                    props.name,
+                    actions.value,
+                    props.icon,
+                    props.color,
+                    props.description,
+                ),
             );
-            console.log(routineStore.get());
+            console.log(await routineStore.get());
         } catch (e) {
             console.log("Error while creating new routine: ", e);
         }
@@ -121,16 +124,13 @@ const loadDevices = async () => {
         }
     }
 };
-const addAction = () => {
-    if (selectedDevice.value) {
-        console.log("Adding action for device:", selectedDevice.value);
-        console.log("Actions array is:", actions.value);
 
-        createFailed.value = false;
-        showDialog.value = false;
-        selectedDevice.value = null;
-    }
-};
+watch(actions, () => {
+    createFailed.value = false;
+    showDialog.value = false;
+    selectedDevice.value = null;
+}, { deep: true });
+
 
 const openDialog = (device) => {
     showDialog.value = true;
@@ -143,15 +143,32 @@ const getDeviceById = (deviceId) => {
 watch(selectedDeviceId, (dev) => {
     if (dev) {
         selectedDevice.value = getDeviceById(selectedDeviceId.value);
-        // @TEMP device is only blinds, have to handle device type
 
+        // Handle device-type actions
         switch (selectedDevice.value.type.name) {
             case "blinds":
-                currentComponent.value = BlindsDeviceAction;
+                actionsList.value = [
+                    { id: "open", name: "Abrir", requiresValue: false },
+                    { id: "close", name: "Cerrar", requiresValue: false },
+                    { id: "setLevel", name: "Set Level", requiresValue: true, min: 0, max: 100 },
+                ];
                 break;
             case "ac":
+                actionsList.value = [
+                    {id: "turnOn", name: "Prender", requiresValue: false},
+                    {id: "turnOff", name: "Apagar", requiresValue: false},
+                    {id: "setTemperature", name: "Set Temperature", requiresValue: true, min: 17, max: 34},
+                ];
+                break;
+                case "speaker":
+                actionsList.value = [
+                    { id: "play", name: "Prender", requiresValue: false },
+                    { id: "stop", name: "Detener", requiresValue: false },
+                    { id: "setVolume", name: "Set Volume", requiresValue: true, min: 0, max: 10 },
+                ];
+                break;
             default:
-                currentComponent.value = null;
+                actionsList.value = null;
         }
     }
 });
@@ -160,4 +177,23 @@ watch(showDialog, (v) => {
         selectedDeviceId.value = null;
     }
 });
+
+
+
 </script>
+
+
+<style>
+.custom-button-green {
+    background-color: #70DC9B;
+    border-radius: 10px !important;
+    border-color: #2fa550 !important;
+    border-width: 3px !important;
+    color: black;
+    font-weight: bold !important;
+}
+
+.border-radius {
+  border-radius: 10px !important;
+}
+</style>

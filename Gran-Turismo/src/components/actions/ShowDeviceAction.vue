@@ -2,6 +2,7 @@
     <div>
         <div v-for="action in actionsList" :key="action.id">
             <v-btn
+                v-if="!action.requiresValue"
                 :class="{ 'bg-black': isSelected(action) }"
                 @click="toggleAction(action)"
                 variant="outlined"
@@ -10,43 +11,59 @@
                 >{{ action.name }}</v-btn
             >
 
-            <template v-if="selectedActions === action && action.requiresLevel">
+            <template  v-if="action.requiresValue">
                 <v-text-field
-                    v-model="actionLevel"
-                    label="Set Level"
+                    v-model="actionValue"
+                    :label="action.name"
                     type="number"
-                    min="0"
-                    max="100"
-                    class="mt-2"
+                    :min="action.minVal"
+                    :max="action.maxVal"
+                    class="mt-4"
+                    variant="outlined"
+                    style="max-width: 250px"
                 ></v-text-field>
             </template>
+        </div>
+        <v-spacer></v-spacer>
+        
+        <div class="mt-8 mb-2">
+        <v-btn class="custom-button-green" elevation="0" text="Agregar" @click="addActions"></v-btn>
+
+         <v-btn text="Cancelar" variant="text" @click="closeDialog"></v-btn>
         </div>
     </div>
 </template>
 
 <script setup>
-import { ref, watch, onMounted } from "vue";
+import { ref } from "vue";
 import { Action } from "@/api/routine";
 
 const props = defineProps({
     deviceId: String,
     actions: Array,
+    actionsList: Array,
 });
 
 const selectedActions = ref([]);
-const actionLevel = ref(null);
+const actionValue = ref(null);
 
-const actionsList = ref([
-    { id: "open", name: "Abrir", requiresLevel: false },
-    { id: "close", name: "Cerrar", requiresLevel: false },
-    { id: "setLevel", name: "Set Level", requiresLevel: true },
-]);
+const addActions = () => {
+    selectedActions.value.forEach((action) => {
+        props.actions.push(new Action(props.deviceId, action.id, action.requiresValue ? [actionValue.value] : []));
+    });
+    console.log(props.actions.length);
+    // close dialog
+    
+}
+
+
 
 const isSelected = (action) => {
     return selectedActions.value.includes(action);
 };
 
 const isActionDisabled = (action) => {
+    // TODO check if its the same or different device
     if (
         selectedActions.value.some(
             (selected) => selected.id === "open" && action.id === "close",
@@ -70,51 +87,33 @@ const toggleAction = (action) => {
         // Remove from selected actions and props.actions
         selectedActions.value.splice(index, 1);
         removeActionFromProps(action);
-        if (action.requiresLevel) {
-            actionLevel.value = null;
+        if (action.requiresValue) {
+            actionValue.value = null;
         }
     } else {
-        if (action.requiresLevel) {
+        if (action.requiresValue) {
             selectedActions.value = [action];
-            actionLevel.value = null;
+            actionValue.value = null;
         } else {
             selectedActions.value.push(action);
         }
-        updateActions();
+        // updateActions();
     }
 };
 
 const removeActionFromProps = (action) => {
     const index = props.actions.findIndex(
         (act) =>
-            act.deviceId === props.deviceId && act.actionName === action.name,
+            act.deviceId === props.deviceId && act.actionName === action.id,
     );
     if (index >= 0) {
         props.actions.splice(index, 1);
     }
 };
 
-const updateActions = () => {
-    props.actions.length = 0; // Clear the original actions array
-    selectedActions.value.forEach((action) => {
-        props.actions.push(
-            new Action(
-                props.deviceId,
-                action.id,
-                action.requiresLevel ? [actionLevel.value] : [],
-            ),
-        );
-    });
-};
 
-// Watch for changes in the actionLevel to update the props.actions array accordingly
-watch(actionLevel, () => {
-    updateActions();
-});
 
-const closeDialog = () => {
-    emits("close");
-};
+
 </script>
 
 <style scoped>
