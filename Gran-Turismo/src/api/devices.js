@@ -8,25 +8,34 @@ class DeviceApi extends Api {
 
     static async getDevice(id, controller) {
         return Api.get(
-            `${Api.baseUrl}/retrieveDevice$userId=${id}`,
+            `${Api.baseUrl}/devices/${id}`,
             controller,
         );
     }
     static async getDevices(controller) {
         return Api.get(`${Api.baseUrl}/devices`, controller);
     }
+
+    static async actionDevice(device, action, params = [], controller){
+        return Api.put(`${Api.baseUrl}/devices/${device.id}/${action}`, params ,controller);
+    }
+
+    static async deleteDevice(device, controller) {
+        return Api.delete(`${Api.baseUrl}/devices/${device.id}`, controller);
+    }
 }
 
 class Device {
-    constructor(name, id, typeId, isLocked = false, isFavorite = false) {
+    constructor(name, id, typeId, password='', isFavorite = false) {
         this.name = name;
         if(id) {
             this.id = id;
         }
         this.type = new DeviceType(typeId); //"go46xmbqeomjrsjr"); // TEMP
+
         this.meta = {
           
-            isLocked: isLocked,
+            password: password,
             isFavorite: isFavorite,
         };
     }

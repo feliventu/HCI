@@ -41,6 +41,20 @@ export const useDeviceStore = defineStore("device", () => {
         });
     }
 
+    async function getDeviceById(id){
+        const result = await DeviceApi.getDevice(id);
+        return result;
+    }
+
+    async function actionDevice(device, action, params = []) {
+        await DeviceApi.actionDevice(device, action, params);
+    }
+
+    async function deleteDevice(device){
+        await DeviceApi.deleteDevice(device);
+        await getDevices();
+    }
+    
     return {
         devices,
         deviceTypes,
@@ -48,5 +62,8 @@ export const useDeviceStore = defineStore("device", () => {
         getDevices,
         getDeviceTypes,
         add,
+        getDeviceById,
+        actionDevice,
+        deleteDevice,
     };
 });

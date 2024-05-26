@@ -40,17 +40,15 @@ export const useHomeStore = defineStore("home", () => {
         const result = await HomeApi.addRoomtoHome(home, room);
     }
 
-        function getHomeByName(name) {
+    function getHomeByName(name) {
         const result = homes.value.find((home) => home.name === name);
         return result;
     }
 
-    async function getRoomsFromHome(home){
+    async function getRoomsFromHome(home) {
         const result = await HomeApi.getRoomsFromHome(home);
         return result;
     }
-
-
 
     return {
         homes,
