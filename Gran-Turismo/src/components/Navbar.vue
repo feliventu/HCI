@@ -2,8 +2,9 @@
   <nav>
     <!-- Second row -->
     <v-toolbar dense flat color="primary" class="px-9 mb-3">
-      <v-toolbar-title class="">HomeAPP</v-toolbar-title>
-      <div class="">
+
+      <v-toolbar-title class="">HomeAPP
+       
         <v-btn
           light
           text
@@ -11,10 +12,13 @@
           :ripple="false"
           rounded
           active-class="selected"
+          class="ml-15"
          
         >
           Mi hogar
         </v-btn>
+
+        
         <v-btn
           light
           rounded
@@ -31,8 +35,11 @@
           Acerca de
         </v-btn>
 
-     
-      </div>
+      
+
+        
+      </v-toolbar-title>
+      
     </v-toolbar>
   </nav>
 </template>
