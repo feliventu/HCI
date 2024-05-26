@@ -6,15 +6,15 @@ class RoutineApi extends Api {
     }
 
     static async getRoutines(controller) {
-        return Api.get(getUrl(), controller);
+        return await Api.get(RoutineApi.getUrl(), controller);
     }
 
     static async getRoutine(id, controller) {
-        return Api.get(getUrl(id), controller);
+        return await Api.get(RoutineApi.getUrl(id), controller);
     }
 
     static async postRoutine(routine, controller) {
-        return Api.post(getUrl(), routine, controller);
+        return await Api.post(RoutineApi.getUrl(), routine, controller);
     }
 }
 
@@ -28,4 +28,14 @@ class Routine {
     }
 }
 
-export { RoutineApi, Routine };
+class Action {
+    constructor(deviceId, actionName, params = []) {
+        this.device = {
+            id: deviceId,
+        };
+        this.actionName = actionName;
+        this.params = params;
+    }
+}
+
+export { RoutineApi, Routine, Action };

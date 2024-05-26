@@ -74,7 +74,7 @@
                     <p class="subtitle">{{ description }}</p>
                     <p class="mt-4 subtitle">Acciones:</p>
                     <p class="subtitle" v-for="device in devices">
-                        {{ device }}
+                        {{ device.actionName }}
                     </p>
                 </v-card-item>
             </v-col>

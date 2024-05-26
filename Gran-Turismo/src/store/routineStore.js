@@ -1,6 +1,6 @@
 import { ref } from "vue";
 import { defineStore } from "pinia";
-import { RoutineApi } from "@/api/routine";
+import { RoutineApi, Routine } from "@/api/routine";
 
 export const useRoutineStore = defineStore("routine", () => {
     const routines = ref([]);
@@ -22,4 +22,10 @@ export const useRoutineStore = defineStore("routine", () => {
         const r = Object.assing(new Routine(), result);
         routines.value.push(r);
     }
+
+    return {
+        routines,
+        get,
+        add,
+    };
 });

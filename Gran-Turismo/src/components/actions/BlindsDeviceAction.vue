@@ -1,57 +1,129 @@
 <template>
     <div>
-        <v-select
-            v-model="selectedAction"
-            :items="actions"
-            item-value="id"
-            item-title="name"
-            label="Actions"
-        ></v-select>
-        <template v-if="selectedAction && selectedAction.requiresLevel">
-            <v-text-field
-                v-model="actionLevel"
-                label="Set Level"
-                type="number"
-                min="0"
-                max="100"
-            ></v-text-field>
-        </template>
+        <div v-for="action in actionsList" :key="action.id">
+            <v-btn
+                :class="{ 'bg-black': isSelected(action) }"
+                @click="toggleAction(action)"
+                variant="outlined"
+                class="mt-2 custom-button"
+                :disabled="isActionDisabled(action)"
+                >{{ action.name }}</v-btn
+            >
+
+            <template v-if="selectedActions === action && action.requiresLevel">
+                <v-text-field
+                    v-model="actionLevel"
+                    label="Set Level"
+                    type="number"
+                    min="0"
+                    max="100"
+                    class="mt-2"
+                ></v-text-field>
+            </template>
+        </div>
     </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
-import { defineProps } from "vue";
+import { ref, watch, onMounted } from "vue";
+import { Action } from "@/api/routine";
 
 const props = defineProps({
-    device: Object,
+    deviceId: String,
+    actions: Array,
 });
 
-const emits = defineEmits(["close"]);
-
-const selectedAction = ref(null);
+const selectedActions = ref([]);
 const actionLevel = ref(null);
 
-const actions = ref([
-    { id: "open", name: "Open", requiresLevel: false },
-    { id: "close", name: "Close", requiresLevel: false },
+const actionsList = ref([
+    { id: "open", name: "Abrir", requiresLevel: false },
+    { id: "close", name: "Cerrar", requiresLevel: false },
     { id: "setLevel", name: "Set Level", requiresLevel: true },
 ]);
 
-const performAction = () => {
-    if (selectedAction.value) {
-        console.log(
-            `Performing ${selectedAction.value.name} on ${props.device.name}`,
-        );
-        if (selectedAction.value.requiresLevel) {
-            console.log(`Level: ${actionLevel.value}`);
+const isSelected = (action) => {
+    return selectedActions.value.includes(action);
+};
+
+const isActionDisabled = (action) => {
+    if (
+        selectedActions.value.some(
+            (selected) => selected.id === "open" && action.id === "close",
+        )
+    ) {
+        return true;
+    }
+    if (
+        selectedActions.value.some(
+            (selected) => selected.id === "close" && action.id === "open",
+        )
+    ) {
+        return true;
+    }
+    return false;
+};
+
+const toggleAction = (action) => {
+    const index = selectedActions.value.indexOf(action);
+    if (index >= 0) {
+        // Remove from selected actions and props.actions
+        selectedActions.value.splice(index, 1);
+        removeActionFromProps(action);
+        if (action.requiresLevel) {
+            actionLevel.value = null;
         }
-        // Logic to perform the action
-        emits("close");
+    } else {
+        if (action.requiresLevel) {
+            selectedActions.value = [action];
+            actionLevel.value = null;
+        } else {
+            selectedActions.value.push(action);
+        }
+        updateActions();
     }
 };
+
+const removeActionFromProps = (action) => {
+    const index = props.actions.findIndex(
+        (act) =>
+            act.deviceId === props.deviceId && act.actionName === action.name,
+    );
+    if (index >= 0) {
+        props.actions.splice(index, 1);
+    }
+};
+
+const updateActions = () => {
+    props.actions.length = 0; // Clear the original actions array
+    selectedActions.value.forEach((action) => {
+        props.actions.push(
+            new Action(
+                props.deviceId,
+                action.id,
+                action.requiresLevel ? [actionLevel.value] : [],
+            ),
+        );
+    });
+};
+
+// Watch for changes in the actionLevel to update the props.actions array accordingly
+watch(actionLevel, () => {
+    updateActions();
+});
 
 const closeDialog = () => {
     emits("close");
 };
 </script>
+
+<style scoped>
+.custom-button {
+    background-color: white;
+    border-radius: 10px !important;
+    border-color: rgba(0, 0, 0, 0.15) !important;
+    border-width: 3px !important;
+    color: black;
+    font-weight: bold !important;
+}
+</style>

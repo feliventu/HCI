@@ -5,7 +5,7 @@
             class="mx-0"
             :description="description"
             :routine="name"
-            :devices="devices"
+            :devices="actions"
             :expanded="true"
         />
         <v-btn
@@ -37,9 +37,10 @@
                     >
                     </v-select>
                     <component
-                        v-if="selectedDevice != null"
+                        v-if="selectedDeviceId != null"
                         :is="currentComponent"
-                        :device="selectedDevice"
+                        :deviceId="selectedDeviceId"
+                        :actions="actions"
                         @close="showDialog = false"
                     >
                     </component>
@@ -62,6 +63,8 @@
 <script setup>
 import { defineProps, ref, shallowRef, onMounted, watch } from "vue";
 import { useRoomStore } from "@/store/roomStore";
+import { useRoutineStore } from "@/store/routineStore";
+import { Routine } from "@/api/routine";
 import BlindsDeviceAction from "@/components/actions/BlindsDeviceAction.vue";
 
 const props = defineProps({
@@ -80,6 +83,7 @@ const actions = ref([]);
 const createFailed = ref(false);
 
 const roomStore = useRoomStore();
+const routineStore = useRoutineStore();
 
 onMounted(async () => {
     await loadDevices();
@@ -90,6 +94,14 @@ const createRoutine = () => {
         console.log("womp womp");
         createFailed.value = true;
     } else {
+        try {
+            routineStore.add(
+                new Routine(props.name, actions.value, props.description),
+            );
+            console.log(routineStore.get());
+        } catch (e) {
+            console.log("Error while creating new routine: ", e);
+        }
         // create routine and jump to the routines route.
     }
 };
@@ -99,8 +111,6 @@ const loadDevices = async () => {
             homeDevices.value = await roomStore.getDevicesFromRoom(
                 `${props.home} Room`,
             );
-            console.log("asd");
-            console.log(homeDevices.value);
         } catch (error) {
             console.error("Failed to load devices: ", error);
         }
@@ -109,6 +119,9 @@ const loadDevices = async () => {
 const addAction = () => {
     if (selectedDevice.value) {
         console.log("Adding action for device:", selectedDevice.value);
+        console.log("Actions array is:", actions.value);
+
+        createFailed.value = false;
         showDialog.value = false;
         selectedDevice.value = null;
     }
