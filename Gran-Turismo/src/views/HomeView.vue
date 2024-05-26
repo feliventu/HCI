@@ -115,7 +115,11 @@ onBeforeMount(async()=>{
 
 onMounted(async () => {
  loading.value = true;
+  try{
   homes.value = (await homeStore.get()).map((home) => home.name);
+  }catch(e){
+    
+  }
   if (homes.value != null) {
     actualHome.value = homes.value[0];
   }
