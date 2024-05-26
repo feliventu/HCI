@@ -19,10 +19,15 @@ class RoutineApi extends Api {
 }
 
 class Routine {
-    constructor(name, actions, description) {
+    constructor(id, name, actions, icon, color, description) {
+        if(id){
+            this.id = id;
+        }
         this.name = name;
         this.actions = actions;
         this.meta = {
+            icon: icon,
+            color: color,
             description: description,
         };
     }

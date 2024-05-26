@@ -3,9 +3,12 @@
         <h2>Acciones para rutina: {{ name }} (hogar '{{ home }}')</h2>
         <RoutineCard
             class="mx-0"
+            :id="id"
             :description="description"
             :routine="name"
             :devices="actions"
+            :icon="icon"
+            :color="color"
             :expanded="true"
         />
         <v-btn
@@ -71,6 +74,8 @@ const props = defineProps({
     home: String,
     name: String,
     description: String,
+    icon: String,
+    color: String,
 });
 
 const showDialog = ref(false);
@@ -89,14 +94,14 @@ onMounted(async () => {
     await loadDevices();
 });
 
-const createRoutine = () => {
+const createRoutine = async () => {
     if (actions.value.length === 0) {
         console.log("womp womp");
         createFailed.value = true;
     } else {
         try {
-            routineStore.add(
-                new Routine(props.name, actions.value, props.description),
+            await routineStore.add(
+                new Routine(null, props.name, actions.value, props.icon, props.color, props.description),
             );
             console.log(routineStore.get());
         } catch (e) {

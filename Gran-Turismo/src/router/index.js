@@ -36,6 +36,8 @@ const router = createRouter({
                 home: route.query.home,
                 name: route.query.name,
                 description: route.query.description,
+                icon: route.query.icon,
+                color: route.query.color,
             }),
         },
         {

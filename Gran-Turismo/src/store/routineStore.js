@@ -18,8 +18,7 @@ export const useRoutineStore = defineStore("routine", () => {
 
     async function add(routine) {
         const result = await RoutineApi.postRoutine(routine);
-
-        const r = Object.assing(new Routine(), result);
+        const r = Object.assign(new Routine(), result);
         routines.value.push(r);
     }
 

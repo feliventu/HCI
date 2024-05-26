@@ -14,7 +14,7 @@
                     <v-icon
                         class=""
                         color="icon"
-                        icon="mdi-shower-head"
+                        :icon="icon"
                     ></v-icon>
                 </v-row>
                 <v-row class="mt-0 mb-1 d-flex justify-center align-center">
@@ -54,12 +54,12 @@
         color="card"
     >
         <v-row no-gutters>
-            <v-col class="routine-color" cols="4">
+            <v-col :class="colorR" cols="4">
                 <v-row class="mt-15 mb-0 d-flex justify-center align-center">
                     <v-icon
                         class=""
                         color="icon"
-                        icon="mdi-shower-head"
+                        :icon="icon"
                     ></v-icon>
                 </v-row>
                 <v-row class="mt-0 mb-1 d-flex justify-center align-center">
@@ -74,7 +74,7 @@
                     <p class="subtitle">{{ description }}</p>
                     <p class="mt-4 subtitle">Acciones:</p>
                     <p class="subtitle" v-for="device in devices">
-                        {{ device.actionName }}
+                      {{  }}  {{ device.actionName }}
                     </p>
                 </v-card-item>
             </v-col>
@@ -95,13 +95,40 @@
     </v-card>
 </template>
 
+<script setup>
+
+const props= defineProps({ 
+        id: String,
+        description: String,
+        routine: String,
+        device: Object,
+        icon: String,
+        color: String,
+        devicesActions: {
+            type: Array,
+            default: () => [],
+        },
+        expanded: Boolean,
+    });
+
+console.log(props.icon)
+const colorR = `bg-${props.color}`;
+</script>
+
+
 <script>
+
+
 export default {
     name: "RutineCard",
     props: {
+        id: String,
         description: String,
         routine: String,
-        devices: {
+        device: Object,
+        icon: String,
+        color: String,
+        devicesActions: {
             type: Array,
             default: () => [],
         },
@@ -126,8 +153,8 @@ export default {
     opacity: 1;
     color: #000000;
 }
-
 .routine-color {
-    background-color: #fb9f9e;
+    background-color: #FB9F9E;
 }
+
 </style>
