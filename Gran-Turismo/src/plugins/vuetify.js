@@ -25,6 +25,12 @@ const customTheme = {
     card: "#EBECF0",
     icon: "#000000",
     text: "#000000",
+    Rojo: "#FB9F9E",
+    Rosa: "#FFC9EA",
+    Azul: "#C2C5FF",
+    Naranja: "#FFD09E" ,
+    Celeste: "#A5D8EA",
+    Verde: "#A5EAA5",
   },
   variables: {
     "border-color": "#000000",

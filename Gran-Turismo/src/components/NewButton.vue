@@ -70,6 +70,10 @@ import { shallowRef } from "vue";
 
 const dialog = shallowRef(false);
 const dialog2 = shallowRef(false);
+import { shallowRef } from "vue";
+
+const dialog = shallowRef(false);
+const dialog2 = shallowRef(false);
 
 export default {
   data() {

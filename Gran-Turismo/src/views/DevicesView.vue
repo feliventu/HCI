@@ -17,11 +17,12 @@
 
       <div v-if="!apiError">
         <div>
-          <v-row class="d-flex justify-space-between mb-n6">
-              <v-col>	<DropButton :items="homes" v-model="actualHome" /></v-col>
-              <v-col class="text-end"><NewButton /></v-col>
-            
-          </v-row>
+            <v-row class="d-flex justify-space-between mb-n6">
+                <v-col>
+                    <DropButton :items="homes" v-model="actualHome"
+                /></v-col>
+                <v-col class="text-end"><NewButton /></v-col>
+            </v-row>
         </div>
   
         <div v-if="devicesAlarm.length === 0 && devicesNoAlarm.length === 0"> 
@@ -46,9 +47,7 @@
             </v-col>
           </v-row>
         </div>
-  
 
-  
         <div v-if="devicesNoAlarm && devicesNoAlarm.length > 0">
           
           <v-row class="pt-4">
@@ -114,7 +113,7 @@ import WelcomeWaifu from "@/components/WelcomeWaifu.vue";
 
 
     if (homes.value != null) {
-      actualHome.value = homes.value[0];
+        actualHome.value = homes.value[0];
     }
 
     
@@ -136,23 +135,21 @@ import WelcomeWaifu from "@/components/WelcomeWaifu.vue";
   watch(
     () => actualHome.value,
     async (newValue) => {
-      const roomName = `${actualHome.value} Room`;
-      devicesByRoom.value = await roomStore.getDevicesFromRoom(roomName);
-  
-      devicesAlarm.value = devicesByRoom.value.filter(
-        (device) => device.type.name === "alarm"
-      );
-      devicesNoAlarm.value = devicesByRoom.value.filter(
-        (device) => device.type.name !== "alarm"
-      );
-    }
-  );
-  
+        const roomName = `${actualHome.value} Room`;
+        devicesByRoom.value = await roomStore.getDevicesFromRoom(roomName);
 
-  </script>
-  
-  <style>
-  .no-padding-margin-right {
+        devicesAlarm.value = devicesByRoom.value.filter(
+            (device) => device.type.name === "alarm",
+        );
+        devicesNoAlarm.value = devicesByRoom.value.filter(
+            (device) => device.type.name !== "alarm",
+        );
+    },
+);
+</script>
+
+<style>
+.no-padding-margin-right {
     padding-right: 0 !important;
     margin-right: 0 !important;
   }
