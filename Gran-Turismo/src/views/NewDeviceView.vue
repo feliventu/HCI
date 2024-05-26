@@ -84,6 +84,7 @@ import { reactive } from "vue";
 const snackbar = ref(false);
 const timeout = ref(4000);
 const text = ref("Dispositivo agregado");
+const alarmId = "mxztsyjzsrq7iaqc";
 
 const homeStore = useHomeStore();
 const deviceStore = useDeviceStore();
@@ -127,7 +128,7 @@ function checkPasswordValue() {
 
 
 const canCreate = computed(() => {
-  if(deviceTypeId.value == 'mxztsyjzsrq7iaqc') {
+  if(deviceTypeId.value == alarmId) {
     return name.value && home1.value && deviceTypeId.value && checkPasswordValue();
   }
   return name.value && home1.value && deviceTypeId.value;
@@ -137,7 +138,7 @@ async function addDeviceToHome() {
 
   let newDevice
 
-  if(deviceTypeId.value == "mxztsyjzsrq7iaqc") {
+  if(deviceTypeId.value == alarmId) {
     newDevice = await deviceStore.add(
     new Device(name.value, null, deviceTypeId.value, {password: password.value})
     )

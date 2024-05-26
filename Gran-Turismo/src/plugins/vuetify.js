@@ -18,7 +18,7 @@ const customTheme = {
     surface: "#FFFFFF",
     primary: "#70DC9B",
     secondary: "#D9D9D9",
-    error: "#B00020",
+    error: "#FAA0A0",
     info: "#2196F3",
     success: "#32a852",
     warning: "#FB8C00",

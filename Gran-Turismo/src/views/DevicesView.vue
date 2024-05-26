@@ -2,6 +2,20 @@
     <v-app>
       <img v-if="loading" class="loading" :src="getImageUrl('loader.gif')" />
       <v-main v-if="!loading" class="px-12 pt-5">
+
+        <div v-if="apiError" class="">
+        <v-alert
+          class=""
+          color="error"
+          icon="mdi-alert-circle"
+          width="400px"
+          title="Error"
+          text="Ha ocurrido un error al cargar los datos, por favor intenta de nuevo."
+          rounded="lg"
+        ></v-alert>
+      </div>
+
+      <div v-if="!apiError">
         <div>
           <v-row class="d-flex justify-space-between mb-n6">
               <v-col>	<DropButton :items="homes" v-model="actualHome" /></v-col>
@@ -64,6 +78,7 @@
             </v-col>
           </v-row>
         </div>
+      </div>
       </v-main>
     </v-app>
   </template>
@@ -81,6 +96,7 @@ import WelcomeWaifu from "@/components/WelcomeWaifu.vue";
   
   const homeStore = useHomeStore();
   const roomStore = useRoomStore();
+  const apiError = ref(false);
   
   const homes = ref([]);
   
@@ -92,11 +108,22 @@ import WelcomeWaifu from "@/components/WelcomeWaifu.vue";
 
   onMounted(async () => {
     loading.value = true;
-  homes.value = (await homeStore.get()).map((home) => home.name);
-  if (homes.value != null) {
-    actualHome.value = homes.value[0];
-  }
-  setTimeout(() => {loading.value = false}, 260);
+
+    try{
+    homes.value = (await homeStore.get()).map((home) => home.name);
+
+
+    if (homes.value != null) {
+      actualHome.value = homes.value[0];
+    }
+
+    
+  }catch(error){
+      
+      apiError.value = true;
+    }
+    setTimeout(() => {loading.value = false}, 260);
+
   
   });
 
