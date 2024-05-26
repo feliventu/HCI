@@ -243,7 +243,6 @@ async function openCloseBlinds() {
 async function toggleDevice() {
   const device = await deviceStore.getDeviceById(props.id);
   
-  console.log("Device:", device);
   if (switchIsOn.value === false) {
     switchIsOn.value = true;
     const startAction =

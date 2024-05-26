@@ -4,6 +4,7 @@
     <img v-if="waifu=='Home'" src="../assets/welcomeGirl.png" alt="Welcome Image" /> 
     <img v-if="waifu=='Devices'" src="../assets/devicesGirl.png" alt="Device Image" />
     <img v-if="waifu=='Routines'" src="../assets/routinesGirl.png" alt="Routine Image" />
+    <img v-if="waifu=='error'" src="../assets/errorGirl.png" alt="Error Image" />
 </div>
 </template>
 

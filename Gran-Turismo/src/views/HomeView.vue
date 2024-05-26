@@ -12,7 +12,7 @@
       </div>
 
       <div v-if="devicesAlarm.length === 0 && devicesNoAlarm.length === 0"> 
-          <WelcomeWaifu :title="'Comencemos con tu nueva casa inteligente'" :waifu="'Home'"/>
+          <WelcomeWaifu :title="'Bienvenido, comencemos con tu nueva casa inteligente'" :waifu="'Home'"/>
       </div>
 
       <div v-if="devicesAlarm && devicesAlarm.length > 0">
