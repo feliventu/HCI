@@ -5,6 +5,7 @@
             <component :is="Component" :key="route.path" />
         </transition>
     </RouterView>
+    
 </template>
 
 <script setup>

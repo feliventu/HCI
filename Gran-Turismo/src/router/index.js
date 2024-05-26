@@ -3,6 +3,8 @@ import HomeView from "@/views/HomeView.vue";
 import DevicesView from "@/views/DevicesView.vue";
 import NewDeviceView from "@/views/NewDeviceView.vue";
 import NewHomeView from "@/views/NewHomeView.vue";
+import NotFoundView from "@/views/NotFoundView.vue";
+
 import NewRoutineView from "@/views/NewRoutineView.vue";
 import RoutineActionsView from "@/views/RoutineActionsView.vue";
 const router = createRouter({
@@ -44,6 +46,12 @@ const router = createRouter({
             path: "/hogares/nuevo",
             name: "new homes",
             component: NewHomeView,
+        },
+        {
+        path: '/:pathMatch(.*)*',
+        name: 'notfound',
+        component: NotFoundView,
+        }
         },
     ],
 });
