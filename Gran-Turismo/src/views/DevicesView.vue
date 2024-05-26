@@ -47,7 +47,7 @@
               cols="12"
               sm="6"
               md="4"
-              lg="2"
+              lg="3"
               class="d-flex justify-space-between"
             >
               <DeviceCard
