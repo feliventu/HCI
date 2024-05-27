@@ -16,8 +16,9 @@
                     v-model="actionValue"
                     :label="action.name"
                     type="number"
-                    :min="action.minVal"
-                    :max="action.maxVal"
+                    :min="action.min"
+                    :max="action.max"
+                    :rules="actionRules(action.min, action.max)"
                     class="mt-4"
                     variant="outlined"
                     style="max-width: 250px"
@@ -35,24 +36,46 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import { Action } from "@/api/routine";
 
 const props = defineProps({
     deviceId: String,
     actions: Array,
     actionsList: Array,
+    showDialog: Boolean,
 });
 
 const selectedActions = ref([]);
 const actionValue = ref(null);
 
+const actionRules = (min, max) => [
+    v => (!isNaN(v) && v >= min && v <= max) || `El valor debe estar entre ${min} y ${max}`,
+];
+
+const emit = defineEmits(['update:showDialog']);
+
+const closeDialog = () => {
+    emit('update:showDialog', false);
+}
+
 const addActions = () => {
     selectedActions.value.forEach((action) => {
-        props.actions.push(new Action(props.deviceId, action.id, action.requiresValue ? [actionValue.value] : []));
+        props.actions.push(new Action(props.deviceId, action.id, []));
     });
+    if (actionValue.value) {
+    let actionId = '';
+    for (let action of props.actionsList) {
+        if (action.requiresValue) {
+            actionId = action.id;
+            break;
+        }
+    }
+    if (actionId) {
+        props.actions.push(new Action(props.deviceId, actionId, [actionValue.value]));
+    }
+}
     console.log(props.actions.length);
-    // close dialog
     
 }
 
@@ -67,15 +90,30 @@ const isActionDisabled = (action) => {
     if (
         selectedActions.value.some(
             (selected) => selected.id === "open" && action.id === "close",
+        ) ||
+
+        selectedActions.value.some(
+            (selected) => action.id === "open" && selected.id === "close",
         )
     ) {
         return true;
     }
     if (
         selectedActions.value.some(
-            (selected) => selected.id === "close" && action.id === "open",
+            (selected) => selected.id === "play" && action.id === "stop",
+        ) ||
+        selectedActions.value.some(
+            (selected) => action.id === "play" && selected.id === "stop",
         )
     ) {
+        return true;
+    }
+    if (selectedActions.value.some(
+        (selected) => selected.id === "turnOn" && action.id === "turnOff",
+    ) ||
+    selectedActions.value.some(
+        (selected) => action.id === "turnOn" && selected.id === "turnOff",
+    )) {
         return true;
     }
     return false;
@@ -88,18 +126,24 @@ const toggleAction = (action) => {
         selectedActions.value.splice(index, 1);
         removeActionFromProps(action);
         if (action.requiresValue) {
-            actionValue.value = null;
+            // actionValue.value = null;
         }
     } else {
         if (action.requiresValue) {
-            selectedActions.value = [action];
-            actionValue.value = null;
+            // selectedActions.value = [action];
+            // actionValue.value = null;
         } else {
             selectedActions.value.push(action);
         }
         // updateActions();
     }
 };
+
+watch(() => props.deviceId, () => {
+    console.log("Device ID changed:", props.deviceId);
+    selectedActions.value = [];
+    actionValue.value = null;
+});
 
 const removeActionFromProps = (action) => {
     const index = props.actions.findIndex(

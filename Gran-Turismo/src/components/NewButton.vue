@@ -3,7 +3,7 @@
     class="custom-button"
     variant="outlined"
     height="40px"
-    @click="dialog = true"
+    @click="handleCreation"
     >+ Nuevo</v-btn
   >
 
@@ -12,27 +12,33 @@
       <v-card-text>
         <router-link to="/dispositivos/nuevo">
           <v-btn
+            v-if="canCreateDevices()"
             class="custom-button"
             elevation="0"
             height="40px"
             text="Dispositivo"
-            @click="dialog2 = true"
+            
           ></v-btn>
         </router-link>
+
+        <router-link to="/rutinas/nuevo">
         <v-btn
+          v-if="canCreateRoutine()"
           class="custom-button"
           elevation="0"
           text="Rutina"
           height="40px"
-          @click="dialog2 = true"
+
         ></v-btn>
+        </router-link>
+
         <router-link to="/hogares/nuevo">
           <v-btn
             class="custom-button"
             height="40px"
             elevation="0"
             text="Hogar"
-            @click="dialog2 = true"
+            
           ></v-btn>
         </router-link>
       </v-card-text>
@@ -65,23 +71,57 @@
 }
 </style>
 
-<script>
-import { shallowRef } from "vue";
+<script setup>
+import { shallowRef, computed, onMounted, ref } from "vue";
+import { useHomeStore } from "@/store/homeStore";
+import { useDeviceStore } from "@/store/deviceStore";
+import { useRouter } from "vue-router";
 
 const dialog = shallowRef(false);
 const dialog2 = shallowRef(false);
-import { shallowRef } from "vue";
 
-const dialog = shallowRef(false);
-const dialog2 = shallowRef(false);
+const homeStore = useHomeStore();
+const deviceStore = useDeviceStore();
 
-export default {
-  data() {
-    return {
-      dialog: false,
-      dialog2: false,
-      dialog3: false,
-    };
-  },
+const homes = ref([]);
+const devices = ref([]);
+
+const router = useRouter();
+
+const handleCreation = () => {
+  if (!canCreateDevices()) {
+    router.push('/hogares/nuevo');
+    dialog.value = false;
+    console.log("test");
+  } else {
+  dialog.value = true;
+  }
+}
+
+function canCreateDevices()  {
+  return homes.value.length > 0;
 };
+
+function canCreateRoutine(){
+  return (canCreateDevices && devices.value.length != 0);
+};
+
+
+onMounted(async () => {
+ 
+  try {
+    homes.value = (await homeStore.get()).map((home) => home.name);
+  } catch (e) {
+  }
+  try{
+    devices.value = (await deviceStore.getDevices());
+  } catch(e){
+  }
+
+  console.log(homes.value);
+  console.log(devices.value);
+  console.log(devices.value.length);
+  console.log(canCreateRoutine());
+});
+
 </script>

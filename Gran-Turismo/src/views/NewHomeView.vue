@@ -13,7 +13,6 @@
 				class="custom-button"
 				variant="outlined"
 				height="40px"
-				to="/dispositivos"
 				@click="addHome()"
 				:disabled="!canCreate"
 				>Crear</v-btn

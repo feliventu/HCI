@@ -16,6 +16,10 @@ class RoutineApi extends Api {
     static async postRoutine(routine, controller) {
         return await Api.post(RoutineApi.getUrl(), routine, controller);
     }
+
+    static async putRoutine(id, controller){ 
+        return await Api.put(RoutineApi.getUrl(`${id}/execute`), {}, controller);
+    }
 }
 
 class Routine {

@@ -191,7 +191,7 @@ let setLevel = ref(props.state.level || 0);
 const fetchDeviceState = async () => {
   const device = await deviceStore.getDeviceById(props.id);
   localState = device.state;
-  
+
   if (props.type === "blinds") {
     localCurrentLevel.value = device.state.currentLevel;
     setLevel.value = device.state.level;
@@ -206,6 +206,7 @@ const fetchDeviceState = async () => {
   }
 
   localIsOn.value = device.state.status;
+  switchIsOn.value = localIsOn.value === "on" || localIsOn.value === "playing";
 };
 
 onMounted(() => {

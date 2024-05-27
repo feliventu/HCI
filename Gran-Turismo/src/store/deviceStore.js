@@ -32,6 +32,7 @@ export const useDeviceStore = defineStore("device", () => {
     async function getDevices() {
         const result = await DeviceApi.getDevices();
         devices.value = result.map((dev) => Object.assign(new Device(), dev));
+        return devices.value;
     }
 
     async function getDeviceTypes() {

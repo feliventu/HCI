@@ -55,7 +55,7 @@
           </v-row>
           <v-row class="mt-n4">
             <v-col
-  
+            :key="device.id"
               v-for="device in devicesNoAlarm"
               cols="12"
               sm="6"

@@ -15,7 +15,7 @@
           class="ml-15"
          
         >
-          Mi hogar
+          Hogar
         </v-btn>
 
         
@@ -28,12 +28,10 @@
         >
           Dispositivos
         </v-btn>
-        <v-btn light rounded text to="rutinas" active-class="bg-white h-100">
+        <v-btn light rounded text to="/rutinas" active-class="bg-white h-100">
           Rutinas
         </v-btn>
-        <v-btn light rounded text to="logs" active-class="bg-white h-100">
-          Acerca de
-        </v-btn>
+        
 
       
 

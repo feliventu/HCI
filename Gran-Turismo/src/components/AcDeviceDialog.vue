@@ -148,7 +148,7 @@
           <v-card-actions>
             <v-spacer></v-spacer>
 
-            <v-btn text="Borrar" class="bg-red" @click="deleteDevice"></v-btn>
+            <v-btn text="Borrar" class="bg-red border-radius" @click="deleteDevice"></v-btn>
             <v-btn text="Cancelar" @click="isActive.value = false"></v-btn>
           </v-card-actions>
         </v-card>

@@ -8,12 +8,14 @@
         style="max-width: 300px"
         variant="outlined"
         v-model="name"
+        :rules="titleRules"
       ></v-text-field>
       <v-text-field
         label="Descripcion"
         style="max-width: 300px"
         variant="outlined"
         v-model="description"
+        :rules="descriptionRules"
       ></v-text-field>
       <v-select
         label="Hogar"
@@ -99,6 +101,15 @@ const supportedColors = [
   { name: "Naranja", color: "#FFD09E" },
   { name: "Celeste", color: "#A5D8EA" },
   { name: "Verde", color: "#A5EAA5" },
+];
+
+const descriptionRules = [
+  v => (v && v.length >= 16) || 'Descripción debe tener minimo 16 caracteres',
+];
+
+const titleRules = [
+  v => !!v || 'Nombre es requerido',
+  v => (v && v.length <= 10) || 'Nombre debe tener maximo 10 caracteres',
 ];
 
 const router = useRouter();

@@ -20,11 +20,12 @@
             >Agregar accion</v-btn
         >
         <v-btn
-            class="custom-button-green mt-5 "
+            class="custom-button-green mt-5 ml-5 "
             variant="outlined"
             height="40px"
+            
             @click="createRoutine()"
-            text="Crear rutina"
+            text="Finalizar"
             ></v-btn
         >
         <v-dialog v-model="showDialog" max-width="600px">
@@ -46,6 +47,7 @@
                         :deviceId="selectedDeviceId"
                         :actions="actions"
                         :actionsList="actionsList"
+                        v-model:showDialog="showDialog"
                         @close="showDialog = false"
                     >
                     </ShowDeviceAction>
@@ -53,9 +55,22 @@
 
             </v-card>
         </v-dialog>
-        <p v-if="createFailed" class="pt-1 text-red" error>
-            Necesitas tener minimo una accion para crear la rutina.
-        </p>
+
+        <v-snackbar v-model="snackbar" :timeout="timeout" color="Rojo">
+      {{ text }}
+      <template v-slot:actions>
+        <v-btn
+          class="mr-n1"
+          color="black"
+          variant="text"
+          @click="snackbar = false"
+        >
+          Cerrar
+        </v-btn>
+      </template>
+    </v-snackbar>
+
+     
     </div>
 </template>
 
@@ -83,6 +98,10 @@ const actions = ref([]);
 const createFailed = ref(false);
 const actionsList = ref([]);
 
+const snackbar = ref(false);
+const timeout = ref(4000);
+const text = ref("Necesitas tener minimo una accion para crear la rutina");
+
 const roomStore = useRoomStore();
 const routineStore = useRoutineStore();
 
@@ -94,6 +113,7 @@ const createRoutine = async () => {
     if (actions.value.length === 0) {
         console.log("womp womp");
         createFailed.value = true;
+        snackbar.value = true;
     } else {
         try {
             await routineStore.add(

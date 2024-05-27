@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "@/views/HomeView.vue";
 import DevicesView from "@/views/DevicesView.vue";
+import RoutinesView from "@/views/RoutinesView.vue";
 import NewDeviceView from "@/views/NewDeviceView.vue";
 import NewHomeView from "@/views/NewHomeView.vue";
 import NotFoundView from "@/views/NotFoundView.vue";
@@ -19,6 +20,11 @@ const router = createRouter({
             path: "/dispositivos",
             name: "devices",
             component: DevicesView,
+        },
+        {
+            path: "/rutinas",
+            name: "routines",
+            component: RoutinesView,
         },
         {
             path: "/dispositivos/nuevo",
@@ -52,7 +58,6 @@ const router = createRouter({
         name: 'notfound',
         component: NotFoundView,
         }
-        },
     ],
 });
 

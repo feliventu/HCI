@@ -14,6 +14,7 @@ export const useRoutineStore = defineStore("routine", () => {
         routines.value = result.map((r) => {
             Object.assign(new Routine(), r);
         });
+        return result;
     }
 
     async function add(routine) {
@@ -22,9 +23,15 @@ export const useRoutineStore = defineStore("routine", () => {
         routines.value.push(r);
     }
 
+    async function executeRoutine(routineId){
+        await RoutineApi.putRoutine(routineId);
+    }
+
     return {
         routines,
+        initialize,
         get,
         add,
+        executeRoutine,
     };
 });

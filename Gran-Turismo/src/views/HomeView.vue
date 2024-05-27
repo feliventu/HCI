@@ -54,12 +54,31 @@
           </v-row>
         </div>
 
-        <div v-if="false">
-          <v-row class="pt-3">
+        <div v-if="routines && routines.length > 0">
+          <v-row class="pt-3 mb-n8">
             <v-col> <h2>Rutinas recientes</h2></v-col>
           </v-row>
 
-          <v-row> </v-row>
+          <v-row class="mt-n5">
+            <v-col
+              cols="12"
+              sm="6"
+              md="4"
+              lg="2"
+              class="d-flex justify-space-between"
+              v-for="routine in routines"
+              :key="routine.id"
+            >
+              <RoutineCard
+                :id="routine.id"
+                :routine="routine.name"
+                :description="routine.meta.description"
+                :icon="routine.meta.icon"
+                :color="routine.meta.color"
+                :expanded="false"
+              />
+            </v-col>
+          </v-row>
         </div>
 
         <div v-if="devicesNoAlarm && devicesNoAlarm.length > 0">
@@ -69,6 +88,7 @@
           <v-row class="mt-n4">
             <v-col
               v-for="device in devicesNoAlarm"
+              :key="device.id"
               cols="12"
               sm="6"
               md="4"
@@ -100,12 +120,16 @@ import DropButton from "@/components/DropButton.vue";
 import { useDeviceStore } from "@/store/deviceStore";
 import { useHomeStore } from "@/store/homeStore";
 import { useRoomStore } from "@/store/roomStore";
-import { ref, onMounted, onBeforeMount } from "vue";
+import { useRoutineStore } from "@/store/routineStore";
+import { ref, onMounted, computed } from "vue";
 import { watch } from "vue";
 
 const apiError = ref(false);
 
 const actualHome = ref();
+
+const routines = ref([]);
+const routineStore = useRoutineStore();
 
 const homeStore = useHomeStore();
 const roomStore = useRoomStore();
@@ -118,13 +142,7 @@ let devicesAlarm = ref([]);
 let devicesNoAlarm = ref([]);
 
 const loading = ref(true);
-/*
-onBeforeMount(async()=>{
-  loading.value = true;
-  setTimeout(() => console.log("cargando"), 3000);
-  loading.value = false;
-});
-*/
+
 
 onMounted(async () => {
   loading.value = true;
@@ -139,6 +157,15 @@ onMounted(async () => {
   setTimeout(() => {
     loading.value = false;
   }, 1500);
+
+  try {
+    routines.value = await routineStore.get();
+  } catch (e) {
+    console.log(e);
+    apiError.value = true;
+  }
+
+  console.log(routines.value);
 });
 
 function getImageUrl(name) {
@@ -150,10 +177,10 @@ async function updateHomeView() {
     return;
   }
 
-  try{
-  const roomName = `${actualHome.value} Room`;
-  devicesByRoom.value = await roomStore.getDevicesFromRoom(roomName);
-  }catch(e){
+  try {
+    const roomName = `${actualHome.value} Room`;
+    devicesByRoom.value = await roomStore.getDevicesFromRoom(roomName);
+  } catch (e) {
     apiError.value = true;
   }
 
@@ -164,6 +191,7 @@ async function updateHomeView() {
     (device) => device.type.name !== "alarm"
   );
 }
+
 
 watch(
   () => actualHome.value,
