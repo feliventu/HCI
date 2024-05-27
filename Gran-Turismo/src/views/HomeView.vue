@@ -54,7 +54,7 @@
           </v-row>
         </div>
 
-        <div v-if="routines && routines.length > 0">
+        <div v-if="routines && isRoutineFromHome(actualHome)">
           <v-row class="pt-3 mb-n8">
             <v-col> <h2>Rutinas recientes</h2></v-col>
           </v-row>
@@ -165,8 +165,15 @@ onMounted(async () => {
     apiError.value = true;
   }
 
-  console.log(routines.value);
 });
+
+function isRoutineFromHome(home) {
+  if (routines.value) {
+    if (routines.value[0])
+    return routines.value[0].actions[0].device.room.home.name == home;
+  }
+  return false;
+}
 
 function getImageUrl(name) {
   return new URL(`../assets/${name}`, import.meta.url).href;

@@ -10,7 +10,7 @@
         @click="executeOrderRoutine()"
     >
         <v-row no-gutters>
-            <v-col class="routine-color" cols="4">
+            <v-col :class="colorR" cols="4">
                 <v-row class="mt-5 mb-0 d-flex justify-center align-center">
                     <v-icon class="" color="icon" :icon="icon"></v-icon>
                 </v-row>

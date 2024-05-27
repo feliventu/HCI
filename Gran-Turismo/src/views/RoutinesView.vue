@@ -114,12 +114,12 @@
   }
   
   
-  watch(
-    () => actualHome.value,
-    async (newValue) => {
-      updateHomeView();
-    }
-  );
+  // watch(
+  //   () => actualHome.value,
+  //   async (newValue) => {
+  //     updateHomeView();
+  //   }
+  // );
   
 
   </script>

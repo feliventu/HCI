@@ -92,7 +92,6 @@ const handleCreation = () => {
   if (!canCreateDevices()) {
     router.push('/hogares/nuevo');
     dialog.value = false;
-    console.log("test");
   } else {
   dialog.value = true;
   }
@@ -118,10 +117,6 @@ onMounted(async () => {
   } catch(e){
   }
 
-  console.log(homes.value);
-  console.log(devices.value);
-  console.log(devices.value.length);
-  console.log(canCreateRoutine());
 });
 
 </script>
